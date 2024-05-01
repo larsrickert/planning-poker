@@ -12,8 +12,7 @@
     "notFound": {
       "text": "Lobby not found.\nGo back to {link}.",
       "link": "home page"
-    },
-    "joinLabel": "Join lobby"
+    }
   },
   "username": {
     "label": "Username",
