@@ -26,6 +26,7 @@
     "pinia": "^2.1.7",
     "sit-onyx": "1.0.0-alpha.89",
     "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5",
     "vue": "^3.4.26",
     "vue-router": "^4.3.2"
   },
@@ -41,7 +42,6 @@
     "prettier": "^3.2.5",
     "sass": "^1.76.0",
     "simple-git-hooks": "^2.11.1",
-    "socket.io-client": "^4.7.5",
     "vitest": "^1.5.3"
   },
   "simple-git-hooks": {
