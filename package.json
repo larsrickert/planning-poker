@@ -16,8 +16,7 @@
     "format:check": "prettier --check .",
     "prepare": "simple-git-hooks",
     "postinstall": "nuxt prepare",
-    "storybook": "storybook dev -p 6006 --no-open",
-    "build-storybook": "storybook build"
+    "storybook": "storybook dev -p 6006 --no-open"
   },
   "dependencies": {
     "@nuxtjs/i18n": "^8.3.1",
