@@ -20,7 +20,6 @@ const handleSubmit = () => {
         v-model="username"
         :label="$t('username.label')"
         :placeholder="$t('username.placeholder')"
-        autocomplete="name"
         required
       />
 

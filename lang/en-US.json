@@ -10,7 +10,7 @@
       }
     },
     "notFound": {
-      "text": "Lobby not found.\nGo back to {link}.",
+      "text": "Lobby not found.\nGo back to the {link}.",
       "link": "home page"
     }
   },

@@ -1,62 +1,14 @@
 <script lang="ts" setup>
-import {
-  OnyxAvatar,
-  OnyxEmpty,
-  OnyxHeadline,
-  OnyxLink,
-  OnyxLoadingIndicator,
-  OnyxTooltip,
-} from "sit-onyx";
-
 const route = useRoute();
 const socketStore = useSocketStore();
 
-socketStore.joinLobby(route.params.id as string);
+watchEffect(() => {
+  const idParam = route.params.id;
+  const id = Array.isArray(idParam) ? idParam[0] : idParam;
+  socketStore.joinLobby(id);
+});
 </script>
 
 <template>
-  <div class="lobby">
-    <OnyxLoadingIndicator v-if="socketStore.isJoiningLobby" />
-
-    <OnyxEmpty v-else-if="!socketStore.isConnected || !socketStore.lobby">
-      <i18n-t keypath="lobby.notFound.text">
-        <template #link>
-          <OnyxLink href="/">{{ $t("lobby.notFound.link") }}</OnyxLink>
-        </template>
-      </i18n-t>
-    </OnyxEmpty>
-
-    <template v-else>
-      <OnyxHeadline is="h2">
-        Planning poker for:
-        <span class="lobby__repository">{{ socketStore.lobby?.repository ?? "N/A" }}</span>
-      </OnyxHeadline>
-
-      <div class="lobby__users">
-        <OnyxTooltip
-          v-for="user of socketStore.lobby.users"
-          :key="user.name"
-          :text="user.name"
-          position="bottom"
-        >
-          <OnyxAvatar :src="`https://github.com/${user.name}.png`" :label="user.name" />
-        </OnyxTooltip>
-      </div>
-    </template>
-  </div>
+  <LobbyTemplate :lobby="socketStore.lobby" :loading="socketStore.isJoiningLobby" />
 </template>
-
-<style lang="scss" scoped>
-.lobby {
-  &__repository {
-    color: var(--onyx-color-text-icons-neutral-soft);
-  }
-
-  &__users {
-    margin-top: var(--onyx-spacing-md);
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--onyx-spacing-3xs);
-  }
-}
-</style>
