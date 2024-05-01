@@ -17,7 +17,6 @@ export const handleMessage = (data: unknown) => {
 export default defineNitroPlugin((nitroApp) => {
   const engine = new Engine();
   const io = new Server();
-
   io.bind(engine);
 
   io.on("connection", (socket) => {
