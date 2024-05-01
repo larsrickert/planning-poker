@@ -28,3 +28,6 @@ logs
 playwright-report
 test-results
 coverage
+
+*storybook.log
+.nuxt-storybook
