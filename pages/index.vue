@@ -1,5 +1,9 @@
+<script lang="ts" setup>
+import { OnyxHeadline } from "sit-onyx";
+</script>
+
 <template>
   <div>
-    <NuxtWelcome />
+    <OnyxHeadline is="h1">{{ $t("home.pageTitle") }}</OnyxHeadline>
   </div>
 </template>

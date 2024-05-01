@@ -11,9 +11,15 @@ importers:
       '@nuxtjs/i18n':
         specifier: ^8.3.1
         version: 8.3.1(rollup@4.17.2)(vue@3.4.26(typescript@5.4.5))
+      '@sit-onyx/icons':
+        specifier: 0.1.0-alpha.0
+        version: 0.1.0-alpha.0
       nuxt:
         specifier: ^3.11.2
         version: 3.11.2(@parcel/watcher@2.4.1)(@types/node@20.12.7)(@unocss/reset@0.59.4)(encoding@0.1.13)(eslint@8.57.0)(floating-vue@5.2.2(@nuxt/kit@3.11.2(rollup@4.17.2))(vue@3.4.26(typescript@5.4.5)))(ioredis@5.4.1)(optionator@0.9.3)(rollup@4.17.2)(sass@1.76.0)(terser@5.31.0)(typescript@5.4.5)(unocss@0.59.4(postcss@8.4.38)(rollup@4.17.2)(vite@5.2.10(@types/node@20.12.7)(sass@1.76.0)(terser@5.31.0)))(vite@5.2.10(@types/node@20.12.7)(sass@1.76.0)(terser@5.31.0))
+      sit-onyx:
+        specifier: 1.0.0-alpha.89
+        version: 1.0.0-alpha.89(@fontsource-variable/source-code-pro@5.0.19)(@fontsource-variable/source-sans-3@5.0.21)(@sit-onyx/icons@0.1.0-alpha.0)(typescript@5.4.5)(vue@3.4.26(typescript@5.4.5))
       vue:
         specifier: ^3.4.26
         version: 3.4.26(typescript@5.4.5)
@@ -27,6 +33,9 @@ importers:
       '@nuxt/test-utils':
         specifier: ^3.12.1
         version: 3.12.1(@playwright/test@1.43.1)(@vue/test-utils@2.4.5)(h3@1.11.1)(happy-dom@14.7.1)(playwright-core@1.43.1)(rollup@4.17.2)(vite@5.2.10(@types/node@20.12.7)(sass@1.76.0)(terser@5.31.0))(vitest@1.5.3(@types/node@20.12.7)(happy-dom@14.7.1)(sass@1.76.0)(terser@5.31.0))(vue-router@4.3.2(vue@3.4.26(typescript@5.4.5)))(vue@3.4.26(typescript@5.4.5))
+      '@nuxtjs/color-mode':
+        specifier: ^3.4.1
+        version: 3.4.1(rollup@4.17.2)
       '@playwright/test':
         specifier: ~1.43.1
         version: 1.43.1
@@ -442,6 +451,12 @@ packages:
   '@floating-ui/utils@0.2.2':
     resolution: {integrity: sha512-J4yDIIthosAsRZ5CPYP/jQvUAQtlZTTD/4suA08/FEnlxqW3sKS9iAhgsa9VYLZ6vDHn/ixJgIqRQPotoBjxIw==}
 
+  '@fontsource-variable/source-code-pro@5.0.19':
+    resolution: {integrity: sha512-mmeEykZsLRuFsklfamKVwahnWNpdAzpvGcOPPiFUydSnrd/9aEXy/HzOSYCOOTCP667L4nio9rB7wO3KVO5J/w==}
+
+  '@fontsource-variable/source-sans-3@5.0.21':
+    resolution: {integrity: sha512-HG2YLa3xs6+wrQrJoiborhX3q5spamGR1xe2QFkEbhD1QEKQ6goXKa+wccybDUrCBrKVOOeNqZQr5DkW0bqb1g==}
+
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
     engines: {node: '>=10.10.0'}
@@ -723,6 +738,9 @@ packages:
     engines: {node: ^14.18.0 || >=16.10.0}
     peerDependencies:
       vue: ^3.3.4
+
+  '@nuxtjs/color-mode@3.4.1':
+    resolution: {integrity: sha512-vZgJqDstxInGw3RGSWbLoCLXtU1mvh1LLeuEA/X3a++DYA4ifwSbNoiSiOyb9qZHFEwz1Xr99H71sXV4IhOaEg==}
 
   '@nuxtjs/i18n@8.3.1':
     resolution: {integrity: sha512-VHnnjFTTep2oC5++61WY06y4c/h943NyHQh1CRUJQvjsdbGSMX3WQjMGk+X05a3pyPFN70aq0YbgtsEoEoTEjQ==}
@@ -1026,6 +1044,9 @@ packages:
   '@sindresorhus/merge-streams@2.3.0':
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
     engines: {node: '>=18'}
+
+  '@sit-onyx/icons@0.1.0-alpha.0':
+    resolution: {integrity: sha512-rHMWnPy8GH2jSMPf3yQvqtQAhMSdyTNn+4GLW4Mk/xUcmRaZueO1OZSg5q1cyjj5q1fbFSRMCuscinUdk1Phwg==}
 
   '@stylistic/eslint-plugin-js@1.8.0':
     resolution: {integrity: sha512-jdvnzt+pZPg8TfclZlTZPiUbbima93ylvQ+wNgHLNmup3obY6heQvgewSu9i2CfS61BnRByv+F9fxQLPoNeHag==}
@@ -3856,6 +3877,15 @@ packages:
   sisteransi@1.0.5:
     resolution: {integrity: sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg==}
 
+  sit-onyx@1.0.0-alpha.89:
+    resolution: {integrity: sha512-mka3JvXPRxHEcxLDjoW8iNMkW+06pmDIJHEKVuaN1rdpTzgZzeHL6CW3mzjV13L8o7dFlL7KLG0u7TI8aPbqDA==}
+    peerDependencies:
+      '@fontsource-variable/source-code-pro': '>= 5'
+      '@fontsource-variable/source-sans-3': '>= 5'
+      '@sit-onyx/icons': ^0.1.0-alpha.0
+      typescript: '>= 5.2.2'
+      vue: '>= 3'
+
   slash@3.0.0:
     resolution: {integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==}
     engines: {node: '>=8'}
@@ -5010,6 +5040,10 @@ snapshots:
 
   '@floating-ui/utils@0.2.2': {}
 
+  '@fontsource-variable/source-code-pro@5.0.19': {}
+
+  '@fontsource-variable/source-sans-3@5.0.21': {}
+
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
       '@humanwhocodes/object-schema': 2.0.3
@@ -5561,6 +5595,16 @@ snapshots:
       - vti
       - vue-tsc
 
+  '@nuxtjs/color-mode@3.4.1(rollup@4.17.2)':
+    dependencies:
+      '@nuxt/kit': 3.11.2(rollup@4.17.2)
+      pathe: 1.1.2
+      pkg-types: 1.1.0
+      semver: 7.6.0
+    transitivePeerDependencies:
+      - rollup
+      - supports-color
+
   '@nuxtjs/i18n@8.3.1(rollup@4.17.2)(vue@3.4.26(typescript@5.4.5))':
     dependencies:
       '@intlify/h3': 0.5.0
@@ -5827,6 +5871,8 @@ snapshots:
   '@sinclair/typebox@0.27.8': {}
 
   '@sindresorhus/merge-streams@2.3.0': {}
+
+  '@sit-onyx/icons@0.1.0-alpha.0': {}
 
   '@stylistic/eslint-plugin-js@1.8.0(eslint@8.57.0)':
     dependencies:
@@ -9186,6 +9232,14 @@ snapshots:
       totalist: 3.0.1
 
   sisteransi@1.0.5: {}
+
+  sit-onyx@1.0.0-alpha.89(@fontsource-variable/source-code-pro@5.0.19)(@fontsource-variable/source-sans-3@5.0.21)(@sit-onyx/icons@0.1.0-alpha.0)(typescript@5.4.5)(vue@3.4.26(typescript@5.4.5)):
+    dependencies:
+      '@fontsource-variable/source-code-pro': 5.0.19
+      '@fontsource-variable/source-sans-3': 5.0.21
+      '@sit-onyx/icons': 0.1.0-alpha.0
+      typescript: 5.4.5
+      vue: 3.4.26(typescript@5.4.5)
 
   slash@3.0.0: {}
 
