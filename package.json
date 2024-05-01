@@ -19,13 +19,16 @@
   },
   "dependencies": {
     "@nuxtjs/i18n": "^8.3.1",
+    "@sit-onyx/icons": "0.1.0-alpha.0",
     "nuxt": "^3.11.2",
+    "sit-onyx": "1.0.0-alpha.89",
     "vue": "^3.4.26",
     "vue-router": "^4.3.2"
   },
   "devDependencies": {
     "@nuxt/eslint": "~0.3.10",
     "@nuxt/test-utils": "^3.12.1",
+    "@nuxtjs/color-mode": "^3.4.1",
     "@playwright/test": "~1.43.1",
     "@vue/test-utils": "^2.4.5",
     "eslint-plugin-playwright": "^1.6.0",

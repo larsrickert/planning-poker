@@ -1,3 +1,5 @@
 {
-  "message": "Hello World"
+  "home": {
+    "pageTitle": "GitHub planning poker"
+  }
 }
