@@ -1,5 +1,24 @@
 {
-  "home": {
-    "pageTitle": "GitHub planning poker"
+  "appName": "GitHub planning poker",
+  "lobby": {
+    "create": {
+      "description": "Please create a new lobby for your planning poker.",
+      "submitLabel": "Create new lobby",
+      "githubRepo": {
+        "label": "GitHub repository",
+        "placeholder": "org/repository"
+      }
+    },
+    "notFound": {
+      "text": "Lobby not found.\nGo back to the {link}.",
+      "link": "home page"
+    }
+  },
+  "username": {
+    "label": "Username",
+    "placeholder": "John Doe",
+    "description": "Please set a username in order to use this application.\nFor the best experience, we recommend to use your GitHub username.",
+    "submitLabel": "Save",
+    "change": "Change username"
   }
 }

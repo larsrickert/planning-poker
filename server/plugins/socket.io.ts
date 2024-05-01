@@ -1,13 +1,7 @@
 import { Server as Engine } from "engine.io";
 import { defineEventHandler } from "h3";
 import { Server } from "socket.io";
-
-/**
- * Handles an incoming websocket message.
- */
-export const handleMessage = (data: unknown) => {
-  console.log("Received message:", data);
-};
+import type { ClientToServerEvents, Lobby, ServerToClientEvents } from "~/stores/socket-store";
 
 /**
  * Socket.io plugin.
@@ -16,15 +10,51 @@ export const handleMessage = (data: unknown) => {
  */
 export default defineNitroPlugin((nitroApp) => {
   const engine = new Engine();
-  const io = new Server();
+  const io = new Server<ClientToServerEvents, ServerToClientEvents>();
   io.bind(engine);
 
+  /**
+   * Map that holds all current lobbies.
+   * Key = ID.
+   */
+  const LOBBIES: Record<string, Lobby> = {};
+
   io.on("connection", (socket) => {
-    console.log(`connected socket "${socket.id}"`);
-    socket.on("message", handleMessage);
+    console.info(`connected socket "${socket.id}"`);
 
     socket.on("disconnect", (reason) => {
-      console.log(`disconnected socket "${socket.id}" due to "${reason}"`);
+      console.info(`disconnected socket "${socket.id}" due to "${reason}"`);
+    });
+
+    socket.on("createLobby", (data) => {
+      // TODO: add error handling when lobby already exists
+      const newLobby: Lobby = {
+        id: crypto.randomUUID(),
+        repository: data.repository,
+        users: [{ name: data.username, role: "admin" }],
+      };
+
+      LOBBIES[newLobby.id] = newLobby;
+      socket.emit("lobbyUpdate", newLobby);
+      console.info(`Created new lobby for "${newLobby.repository}"`);
+    });
+
+    socket.on("joinLobby", (data) => {
+      // TODO: add error handling when lobby does not exist
+      if (!(data.id in LOBBIES)) {
+        console.error(`Tried to join non-existing lobby "${data.id}"`);
+        socket.disconnect();
+        return;
+      }
+
+      const lobby = LOBBIES[data.id];
+
+      if (!lobby.users.find((i) => i.name === data.username)) {
+        lobby.users.push({ name: data.username, role: "user" });
+        LOBBIES[data.id] = lobby;
+      }
+
+      socket.emit("lobbyUpdate", lobby);
     });
   });
 

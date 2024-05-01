@@ -4,16 +4,17 @@ import { OnyxPageLayout } from "sit-onyx";
 
 <template>
   <OnyxPageLayout>
-    <slot />
+    <div class="page">
+      <slot />
+    </div>
   </OnyxPageLayout>
 </template>
 
 <style lang="scss">
-.onyx-page__main {
+.page {
   padding: var(--onyx-grid-margin);
   box-sizing: content-box;
   max-width: var(--onyx-grid-max-width);
   margin: 0 auto;
-  width: 100%;
 }
 </style>

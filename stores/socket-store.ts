@@ -1,8 +1,45 @@
 import { defineStore } from "pinia";
+import type { Socket } from "socket.io-client";
 import { io } from "socket.io-client";
 
+export type ServerToClientEvents = {
+  lobbyUpdate: (lobby: Lobby) => void;
+};
+
+export type ClientToServerEvents = {
+  createLobby: (data: CreateLobbyData) => void;
+  joinLobby: (data: JoinLobbyData) => void;
+};
+
+export type Lobby = {
+  /**
+   * Unique lobby ID.
+   */
+  id: string;
+  /**
+   * Name of the (GitHub) repository.
+   */
+  repository: string;
+  users: User[];
+};
+
+export type CreateLobbyData = Pick<Lobby, "repository"> & {
+  username: string;
+};
+
+export type JoinLobbyData = Pick<Lobby, "id"> & {
+  username: string;
+};
+
+export type User = {
+  name: string;
+  role: UserRole;
+};
+
+export type UserRole = "admin" | "user";
+
 export const useSocketStore = defineStore("socket.io", () => {
-  const socket = io({
+  const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io({
     autoConnect: false,
   });
 
@@ -11,13 +48,94 @@ export const useSocketStore = defineStore("socket.io", () => {
    */
   const isConnected = ref(false);
 
-  socket.on("connect", () => (isConnected.value = true));
-  socket.on("disconnect", () => (isConnected.value = false));
+  /**
+   * Current lobby state.
+   */
+  const lobby = ref<Lobby>();
 
   /**
-   * Connects to the websocket.
+   * Current user name.
    */
-  const connect = () => socket.connect();
+  const username = ref("");
 
-  return { isConnected, connect };
+  // sync username with localStorage
+  onMounted(() => {
+    username.value = localStorage.getItem("username") ?? "";
+    watch(username, (newValue) => {
+      localStorage.setItem("username", newValue);
+    });
+  });
+
+  socket.on("connect", () => (isConnected.value = true));
+  socket.on("disconnect", () => (isConnected.value = false));
+  socket.on("lobbyUpdate", (newLobby) => (lobby.value = newLobby));
+
+  /**
+   * Whether create lobby is currently loading.
+   */
+  const isJoiningLobby = ref(false);
+
+  /**
+   * Creates a new lobby.
+   */
+  const createLobby = (repository: string) => {
+    return new Promise<Lobby>((resolve) => {
+      isJoiningLobby.value = true;
+
+      socket.once("lobbyUpdate", (lobby) => {
+        isJoiningLobby.value = false;
+        resolve(lobby);
+      });
+
+      const data: CreateLobbyData = { repository, username: username.value };
+
+      if (socket.connected) {
+        socket.emit("createLobby", data);
+      } else {
+        socket.connect();
+
+        socket.once("connect", () => {
+          socket.emit("createLobby", data);
+        });
+      }
+    });
+  };
+
+  /**
+   * Joins the given lobby.
+   */
+  const joinLobby = (id: string) => {
+    return new Promise<void>((resolve, reject) => {
+      if (lobby.value?.id === id) {
+        resolve();
+        return;
+      }
+
+      isJoiningLobby.value = true;
+
+      socket.once("lobbyUpdate", () => {
+        isJoiningLobby.value = false;
+        resolve();
+      });
+
+      socket.once("disconnect", () => {
+        isJoiningLobby.value = false;
+        reject();
+      });
+
+      const data: JoinLobbyData = { id, username: username.value };
+
+      if (socket.connected) {
+        socket.emit("joinLobby", data);
+      } else {
+        socket.connect();
+
+        socket.once("connect", () => {
+          socket.emit("joinLobby", data);
+        });
+      }
+    });
+  };
+
+  return { isConnected, createLobby, isJoiningLobby, lobby, joinLobby, username };
 });
