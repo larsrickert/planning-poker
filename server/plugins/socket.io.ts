@@ -66,6 +66,7 @@ export default defineNitroPlugin((nitroApp) => {
 
       const lobby = LOBBIES[lobbyId];
       lobby.selectedIssue = issueNumber;
+      delete lobby.averageEstimation;
 
       // reset user estimations
       lobby.users = lobby.users.map((i) => ({ ...i, estimation: undefined }));
@@ -90,6 +91,24 @@ export default defineNitroPlugin((nitroApp) => {
       }
 
       LOBBIES[lobbyId].users[userIndex].estimation = estimation;
+      socket.emit("lobbyUpdate", LOBBIES[lobbyId]);
+    });
+
+    socket.on("revealEstimations", (lobbyId) => {
+      // TODO: add error handling when lobby does not exist
+      if (!(lobbyId in LOBBIES)) {
+        console.error(`Tried to reveal estimations for non-existing lobby "${lobbyId}"`);
+        return;
+      }
+
+      const estimations = LOBBIES[lobbyId].users
+        .map((i) => i.estimation)
+        .filter((i): i is NonNullable<typeof i> => i !== undefined);
+
+      const average =
+        estimations.reduce((sum, estimation) => sum + estimation, 0) / (estimations.length || 1);
+
+      LOBBIES[lobbyId].averageEstimation = average;
       socket.emit("lobbyUpdate", LOBBIES[lobbyId]);
     });
   });

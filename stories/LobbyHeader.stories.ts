@@ -28,3 +28,20 @@ export const Skeleton = {
     skeleton: true,
   },
 } satisfies Story;
+
+export const Estimated = {
+  args: {
+    ...Default.args,
+    users: Default.args.users.map((i, index) => ({
+      ...i,
+      estimation: index % 2 === 0 ? 42 : undefined,
+    })),
+  },
+} satisfies Story;
+
+export const ShowEstimations = {
+  args: {
+    ...Estimated.args,
+    showEstimations: true,
+  },
+} satisfies Story;

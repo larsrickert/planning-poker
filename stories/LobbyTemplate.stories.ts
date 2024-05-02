@@ -7,7 +7,7 @@ const meta = {
   title: "pages/Lobby",
   ...defineStorybookActionsAndVModels({
     component: LobbyTemplate,
-    events: ["selectIssue", "estimate"],
+    events: ["selectIssue", "estimate", "revealEstimations"],
   }),
 };
 
@@ -50,7 +50,21 @@ export const SelectedIssue = {
     ...Default.args,
     lobby: {
       ...Default.args.lobby,
+      users: Default.args.lobby.users.map((i, index) => ({
+        ...i,
+        estimation: index % 2 === 0 ? 42 : undefined,
+      })),
       selectedIssue: 4,
+    },
+  },
+} satisfies Story;
+
+export const RevealedEstimations = {
+  args: {
+    ...SelectedIssue.args,
+    lobby: {
+      ...SelectedIssue.args.lobby,
+      averageEstimation: 42,
     },
   },
 } satisfies Story;

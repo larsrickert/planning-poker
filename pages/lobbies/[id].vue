@@ -52,5 +52,6 @@ const issues = computedAsync(
     :issues="issues"
     @select-issue="socketStore.selectIssue"
     @estimate="socketStore.estimate"
+    @reveal-estimations="socketStore.revealEstimations"
   />
 </template>

@@ -11,6 +11,7 @@ export type ClientToServerEvents = {
   joinLobby: (data: JoinLobbyData) => void;
   selectIssue: (lobbyId: string, issueNumber: number) => void;
   estimate: (lobbyId: string, username: string, estimation: number) => void;
+  revealEstimations: (lobbyId: string) => void;
 };
 
 export type Lobby = {
@@ -24,6 +25,7 @@ export type Lobby = {
   repository: string;
   users: User[];
   selectedIssue?: number;
+  averageEstimation?: number;
 };
 
 export type CreateLobbyData = Pick<Lobby, "repository"> & {
@@ -164,6 +166,11 @@ export const useSocketStore = defineStore("socket.io", () => {
     socket.emit("estimate", lobby.value.id, username.value, estimation);
   };
 
+  const revealEstimations = () => {
+    if (!lobby.value) return;
+    socket.emit("revealEstimations", lobby.value.id);
+  };
+
   return {
     isConnected,
     createLobby,
@@ -174,5 +181,6 @@ export const useSocketStore = defineStore("socket.io", () => {
     currentUser,
     selectIssue,
     estimate,
+    revealEstimations,
   };
 });

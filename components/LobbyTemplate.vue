@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { OnyxEmpty, OnyxHeadline, OnyxLink } from "sit-onyx";
+import { OnyxButton, OnyxEmpty, OnyxHeadline, OnyxLink } from "sit-onyx";
 import type { GitHubIssue } from "~/types/github";
 import EstimationCard from "./EstimationCard.vue";
 import type LobbyHeader from "./LobbyHeader.vue";
@@ -40,6 +40,7 @@ const emit = defineEmits<{
    * Emitted when the users selects an estimation for the current issue.
    */
   estimate: [value: number];
+  revealEstimations: [];
 }>();
 
 const selectedIssue = computed(() => {
@@ -51,6 +52,10 @@ const user = computed(() => {
 });
 
 const userRole = computed(() => user.value?.role ?? "user");
+
+const votedUsers = computed(
+  () => props.lobby?.users.filter((i) => i.estimation != undefined).length,
+);
 </script>
 
 <template>
@@ -60,6 +65,7 @@ const userRole = computed(() => user.value?.role ?? "user");
       :repository="props.lobby?.repository"
       :users="props.lobby?.users"
       :skeleton="props.loading"
+      :show-estimations="props.lobby?.averageEstimation != undefined"
     />
 
     <OnyxEmpty v-if="!props.loading && !props.lobby">
@@ -80,19 +86,40 @@ const userRole = computed(() => user.value?.role ?? "user");
     />
 
     <template v-if="selectedIssue">
-      <OnyxHeadline is="h3">{{ $t("lobby.estimation.headline") }}</OnyxHeadline>
+      <template v-if="props.lobby?.averageEstimation != undefined">
+        <OnyxHeadline is="h3" class="average"> {{ $t("lobby.estimation.average") }}: </OnyxHeadline>
+        <span class="average__value">{{ props.lobby.averageEstimation }}</span>
+      </template>
 
-      <div class="lobby__estimations">
-        <EstimationCard
-          v-for="i in AVAILABLE_ESTIMATIONS"
-          :key="i"
-          :value="i"
-          :selected="user?.estimation === i"
-          @click="emit('estimate', i)"
-        />
-      </div>
+      <template v-else>
+        <OnyxHeadline is="h3">{{ $t("lobby.estimation.headline") }}</OnyxHeadline>
 
-      <GitHubIssueBodyRenderer :issue="selectedIssue" />
+        <div class="estimations">
+          <EstimationCard
+            v-for="i in AVAILABLE_ESTIMATIONS"
+            :key="i"
+            :value="i"
+            :selected="user?.estimation === i"
+            @click="emit('estimate', i)"
+          />
+
+          <OnyxButton
+            v-if="userRole === 'admin'"
+            class="estimations__reveal"
+            :label="
+              $t('lobby.estimation.reveal', {
+                n: votedUsers,
+                count: props.lobby?.users.length ?? 0,
+              })
+            "
+            variation="secondary"
+            mode="outline"
+            @click="emit('revealEstimations')"
+          />
+        </div>
+      </template>
+
+      <GitHubIssueBodyRenderer class="lobby__issue" :issue="selectedIssue" />
     </template>
   </div>
 </template>
@@ -107,12 +134,29 @@ const userRole = computed(() => user.value?.role ?? "user");
     margin-bottom: var(--onyx-spacing-3xl);
   }
 
-  &__estimations {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--onyx-spacing-xs);
-    margin-top: var(--onyx-spacing-xs);
-    margin-bottom: var(--onyx-spacing-lg);
+  &__issue {
+    margin-top: var(--onyx-spacing-lg);
+  }
+}
+
+.estimations {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--onyx-spacing-xs);
+  margin-top: var(--onyx-spacing-xs);
+
+  &__reveal {
+    margin-left: var(--onyx-spacing-2xl);
+  }
+}
+
+.average {
+  &__value {
+    font-size: 5rem;
+    line-height: 5rem;
+    font-weight: 600;
+    color: var(--onyx-color-text-icons-neutral-soft);
   }
 }
 </style>

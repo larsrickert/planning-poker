@@ -8,6 +8,7 @@ const props = withDefaults(
     repository?: string;
     skeleton?: boolean;
     users?: User[];
+    showEstimations?: boolean;
   }>(),
   {
     repository: "N/A",
@@ -39,7 +40,8 @@ const props = withDefaults(
           class="avatar"
         >
           <div v-if="user.estimation != undefined" class="avatar__overlay">
-            <OnyxIcon :icon="check" />
+            <span v-if="props.showEstimations">{{ user.estimation }}</span>
+            <OnyxIcon v-else :icon="check" />
           </div>
           <OnyxAvatar :src="`https://github.com/${user.name}.png`" :label="user.name" />
         </OnyxTooltip>
@@ -87,15 +89,22 @@ const props = withDefaults(
     position: absolute;
     left: 0;
     top: 0;
-    background-color: color-mix(in srgb, var(--onyx-color-base-success-500), transparent 20%);
+    background-color: color-mix(in srgb, var(--onyx-color-base-neutral-400), transparent 25%);
     color: #fff;
     width: 100%;
     height: 100%;
     border-radius: var(--onyx-radius-full);
 
+    font-size: 1.25rem;
+    font-weight: 600;
+
     display: flex;
     justify-content: center;
     align-items: center;
+
+    &:has(.onyx-icon) {
+      background-color: color-mix(in srgb, var(--onyx-color-base-success-400), transparent 25%);
+    }
   }
 }
 </style>
