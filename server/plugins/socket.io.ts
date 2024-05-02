@@ -26,7 +26,7 @@ export default defineNitroPlugin((nitroApp) => {
       console.info(`disconnected socket "${socket.id}" due to "${reason}"`);
     });
 
-    socket.on("createLobby", (data) => {
+    socket.on("createLobby", async (data) => {
       // TODO: add error handling when lobby already exists
       const newLobby: Lobby = {
         id: crypto.randomUUID(),
@@ -34,18 +34,24 @@ export default defineNitroPlugin((nitroApp) => {
         users: [{ name: data.username, role: "admin" }],
       };
 
+      await socket.join(newLobby.id);
+
       LOBBIES[newLobby.id] = newLobby;
-      socket.emit("lobbyUpdate", newLobby);
+      io.to(newLobby.id).emit("lobbyUpdate", newLobby);
       console.info(`Created new lobby for "${newLobby.repository}"`);
     });
 
-    socket.on("joinLobby", (data) => {
+    socket.on("joinLobby", async (data) => {
       // TODO: add error handling when lobby does not exist
       if (!(data.id in LOBBIES)) {
         console.error(`Tried to join non-existing lobby "${data.id}"`);
         socket.disconnect();
         return;
       }
+
+      // switch room
+      await Promise.all(Array.from(socket.rooms.values()).map((room) => socket.leave(room)));
+      await socket.join(data.id);
 
       const lobby = LOBBIES[data.id];
 
@@ -54,7 +60,7 @@ export default defineNitroPlugin((nitroApp) => {
         LOBBIES[data.id] = lobby;
       }
 
-      socket.emit("lobbyUpdate", lobby);
+      io.to(lobby.id).emit("lobbyUpdate", lobby);
     });
 
     socket.on("selectIssue", (lobbyId, issueNumber) => {
@@ -72,7 +78,7 @@ export default defineNitroPlugin((nitroApp) => {
       lobby.users = lobby.users.map((i) => ({ ...i, estimation: undefined }));
 
       LOBBIES[lobbyId] = lobby;
-      socket.emit("lobbyUpdate", lobby);
+      io.to(lobby.id).emit("lobbyUpdate", lobby);
     });
 
     socket.on("estimate", (lobbyId, username, estimation) => {
@@ -91,7 +97,7 @@ export default defineNitroPlugin((nitroApp) => {
       }
 
       LOBBIES[lobbyId].users[userIndex].estimation = estimation;
-      socket.emit("lobbyUpdate", LOBBIES[lobbyId]);
+      io.to(lobbyId).emit("lobbyUpdate", LOBBIES[lobbyId]);
     });
 
     socket.on("revealEstimations", (lobbyId) => {
@@ -109,7 +115,7 @@ export default defineNitroPlugin((nitroApp) => {
         estimations.reduce((sum, estimation) => sum + estimation, 0) / (estimations.length || 1);
 
       LOBBIES[lobbyId].averageEstimation = average;
-      socket.emit("lobbyUpdate", LOBBIES[lobbyId]);
+      io.to(lobbyId).emit("lobbyUpdate", LOBBIES[lobbyId]);
     });
   });
 

@@ -18,7 +18,8 @@
       "headline": "Select an estimation",
       "reveal": "Reveal votes ({n} of {count})",
       "average": "Average estimation"
-    }
+    },
+    "waitingForAdmin": "Waiting for admin to select an issue..."
   },
   "username": {
     "label": "Username",

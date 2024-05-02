@@ -85,6 +85,10 @@ const votedUsers = computed(
       @select="emit('selectIssue', $event)"
     />
 
+    <p v-else-if="!selectedIssue">
+      {{ $t("lobby.waitingForAdmin") }}
+    </p>
+
     <template v-if="selectedIssue">
       <template v-if="props.lobby?.averageEstimation != undefined">
         <OnyxHeadline is="h3" class="average"> {{ $t("lobby.estimation.average") }}: </OnyxHeadline>
