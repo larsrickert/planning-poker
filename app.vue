@@ -15,10 +15,10 @@ const isDark = computed({
 <template>
   <OnyxAppLayout class="onyx-grid-max-md">
     <template #navBar>
-      <div class="app-name">
+      <header class="header">
         <OnyxHeadline is="h1">{{ $t("appName") }}</OnyxHeadline>
 
-        <div class="app-name__actions">
+        <div class="header__actions">
           <ClientOnly>
             <OnyxSwitch v-model="isDark" :label="$t('darkMode')" />
 
@@ -32,7 +32,7 @@ const isDark = computed({
             </OnyxTooltip>
           </ClientOnly>
         </div>
-      </div>
+      </header>
     </template>
 
     <NuxtLayout>
@@ -47,7 +47,7 @@ const isDark = computed({
 </template>
 
 <style lang="scss" scoped>
-.app-name {
+.header {
   display: flex;
   align-items: center;
   justify-content: space-between;
