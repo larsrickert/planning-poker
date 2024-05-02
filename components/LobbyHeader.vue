@@ -29,7 +29,7 @@ const props = withDefaults(
         <OnyxSkeleton v-for="i in 3" :key="i" class="avatar-skeleton" />
       </template>
 
-      <template v-else>
+      <ClientOnly v-else>
         <OnyxTooltip
           v-for="user of props.users"
           :key="user.name"
@@ -38,7 +38,7 @@ const props = withDefaults(
         >
           <OnyxAvatar :src="`https://github.com/${user.name}.png`" :label="user.name" />
         </OnyxTooltip>
-      </template>
+      </ClientOnly>
     </div>
   </div>
 </template>

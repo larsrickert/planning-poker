@@ -11,14 +11,16 @@ const isDialogOpen = ref(false);
     <NuxtLayout>
       <div class="app-name">
         <OnyxHeadline is="h1">{{ $t("appName") }}</OnyxHeadline>
-        <OnyxTooltip :text="$t('username.change')" position="bottom">
-          <OnyxIconButton
-            :label="$t('username.change')"
-            :icon="settings"
-            variation="secondary"
-            @click="isDialogOpen = true"
-          />
-        </OnyxTooltip>
+        <ClientOnly>
+          <OnyxTooltip :text="$t('username.change')" position="bottom">
+            <OnyxIconButton
+              :label="$t('username.change')"
+              :icon="settings"
+              variation="secondary"
+              @click="isDialogOpen = true"
+            />
+          </OnyxTooltip>
+        </ClientOnly>
       </div>
 
       <UsernameDialog
@@ -26,7 +28,7 @@ const isDialogOpen = ref(false);
         v-model="socketStore.username"
         @update:model-value="isDialogOpen = false"
       />
-      <NuxtPage v-else />
+      <NuxtPage />
     </NuxtLayout>
   </OnyxAppLayout>
 </template>

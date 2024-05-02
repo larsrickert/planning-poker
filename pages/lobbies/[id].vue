@@ -5,6 +5,7 @@ const route = useRoute();
 const socketStore = useSocketStore();
 
 watchEffect(() => {
+  if (!socketStore.username) return;
   const idParam = route.params.id;
   const id = Array.isArray(idParam) ? idParam[0] : idParam;
   socketStore.joinLobby(id);
@@ -35,7 +36,7 @@ const issues = computedAsync(async () => {
 <template>
   <LobbyTemplate
     :lobby="socketStore.lobby"
-    :loading="socketStore.isJoiningLobby && socketStore.isConnected"
+    :loading="socketStore.isJoiningLobby || !socketStore.username"
     :role="socketStore.currentUser?.role ?? 'user'"
     :issues="issues"
     @select-issue="socketStore.selectIssue"
