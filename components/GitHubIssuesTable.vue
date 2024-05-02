@@ -18,6 +18,8 @@ const props = defineProps<{
 const emit = defineEmits<{
   select: [number: number];
 }>();
+
+const isOpen = ref(true);
 </script>
 
 <template>
@@ -30,40 +32,44 @@ const emit = defineEmits<{
       {{ $t("issues.empty") }}
     </OnyxEmpty>
 
-    <OnyxTable v-else striped grid>
-      <thead>
-        <tr>
-          <th>{{ $t("issues.id") }}</th>
-          <th>{{ $t("issues.title") }}</th>
-          <th>{{ $t("issues.assignees") }}</th>
-        </tr>
-      </thead>
+    <details v-else :open="isOpen" @toggle="isOpen = $event.target.open">
+      <summary>{{ isOpen ? $t("issues.hide") : $t("issues.show") }}</summary>
 
-      <tbody>
-        <tr
-          v-for="issue in props.issues"
-          :key="issue.number"
-          :class="{ selected: issue.number === props.selectedIssue }"
-          @click="emit('select', issue.number)"
-        >
-          <td>
-            <OnyxLink :href="issue.html_url" target="_blank"> #{{ issue.number }} </OnyxLink>
-          </td>
-          <td>{{ issue.title }}</td>
-          <td>
-            <OnyxAvatarStack v-if="issue.assignees.length">
-              <OnyxAvatar
-                v-for="assignee in issue.assignees"
-                :key="assignee.login"
-                :label="assignee.login"
-                :src="assignee.avatar_url"
-                size="24px"
-              />
-            </OnyxAvatarStack>
-          </td>
-        </tr>
-      </tbody>
-    </OnyxTable>
+      <OnyxTable striped grid>
+        <thead>
+          <tr>
+            <th>{{ $t("issues.id") }}</th>
+            <th>{{ $t("issues.title") }}</th>
+            <th>{{ $t("issues.assignees") }}</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr
+            v-for="issue in props.issues"
+            :key="issue.number"
+            :class="{ selected: issue.number === props.selectedIssue }"
+            @click="emit('select', issue.number)"
+          >
+            <td>
+              <OnyxLink :href="issue.html_url" target="_blank"> #{{ issue.number }} </OnyxLink>
+            </td>
+            <td>{{ issue.title }}</td>
+            <td>
+              <OnyxAvatarStack v-if="issue.assignees.length">
+                <OnyxAvatar
+                  v-for="assignee in issue.assignees"
+                  :key="assignee.login"
+                  :label="assignee.login"
+                  :src="assignee.avatar_url"
+                  size="24px"
+                />
+              </OnyxAvatarStack>
+            </td>
+          </tr>
+        </tbody>
+      </OnyxTable>
+    </details>
   </div>
 </template>
 
@@ -95,6 +101,14 @@ const emit = defineEmits<{
     &:hover td::before {
       background-color: var(--onyx-color-base-primary-100);
     }
+  }
+}
+
+details {
+  width: max-content;
+
+  summary {
+    margin-bottom: var(--onyx-spacing-2xs);
   }
 }
 </style>

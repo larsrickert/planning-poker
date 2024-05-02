@@ -44,3 +44,13 @@ export const IssuesLoading = {
 } satisfies Story;
 
 export const Empty = { args: {} } satisfies Story;
+
+export const SelectedIssue = {
+  args: {
+    ...Default.args,
+    lobby: {
+      ...Default.args.lobby,
+      selectedIssue: 4,
+    },
+  },
+} satisfies Story;

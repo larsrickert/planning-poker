@@ -27,6 +27,8 @@
     "assignees": "Assignees",
     "title": "Title",
     "description": "Select a GitHub issue below to start the planning.",
-    "empty": "No issues found"
+    "empty": "No issues found",
+    "show": "Show issues",
+    "hide": "Hide issues"
   }
 }
