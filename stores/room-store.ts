@@ -99,7 +99,7 @@ export const useRoomStore = defineStore("room", () => {
    */
   const estimate = (estimation: number) => {
     if (!room.value) return;
-    socket.emit("estimate", room.value.id, username.value, estimation);
+    socket.emit("estimate", room.value.id, estimation);
   };
 
   const endEstimation = () => {

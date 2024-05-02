@@ -89,7 +89,6 @@ const isModerator = computed(() => user.value?.id === props.room?.moderator);
         <OnyxHeadline is="h3">{{ $t("room.estimation.headline") }}</OnyxHeadline>
 
         <div class="estimations">
-          <!-- TODO: check selected -->
           <EstimationCard
             v-for="i in AVAILABLE_ESTIMATIONS"
             :key="i"

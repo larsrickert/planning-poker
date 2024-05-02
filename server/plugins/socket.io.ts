@@ -101,7 +101,7 @@ export default defineNitroPlugin((nitroApp) => {
       console.info(`Selected story "${args[0]}" for room "${room.id}"`);
     });
 
-    socket.on("estimate", (roomId, ...args) => {
+    socket.on("estimate", (roomId, estimation) => {
       if (!ROOMS.has(roomId)) {
         console.error(`Tried to estimate for non-existing room "${roomId}"`);
         return;
@@ -116,10 +116,9 @@ export default defineNitroPlugin((nitroApp) => {
         return;
       }
 
-      // TODO: update arg types
-      room.estimate(socket.data.userId, args[1]);
+      room.estimate(socket.data.userId, estimation);
       emitUpdate(roomId);
-      console.info(`Estimated for user "${args[0]}" in room "${roomId}"`);
+      console.info(`Estimated for user "${socket.data.userId}" in room "${roomId}"`);
     });
 
     socket.on("endEstimation", (roomId) => {

@@ -90,9 +90,10 @@ export type ServerToClientEvents = {
 
 export type ClientToServerEvents = {
   createRoom: (...args: Parameters<typeof createRoom>) => void;
+  estimate: (roomId: string, estimation: number) => void;
 } & RoomEvents;
 
-type RoomEvents<T = Pick<Room, "join" | "selectStory" | "estimate" | "endEstimation">> = {
+type RoomEvents<T = Pick<Room, "join" | "selectStory" | "endEstimation">> = {
   [K in keyof T]: T[K] extends (...a: infer U) => unknown
     ? (roomId: string, ...a: U) => void
     : never;
