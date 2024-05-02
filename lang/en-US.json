@@ -36,6 +36,7 @@
     "description": "Select a GitHub issue below to start the planning.",
     "empty": "No issues found",
     "show": "Show issues",
-    "hide": "Hide issues"
+    "hide": "Hide issues",
+    "emptyBody": "Issue has no description"
   }
 }
