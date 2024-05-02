@@ -31,6 +31,7 @@
     "id": "Issue",
     "assignees": "Assignees",
     "title": "Title",
+    "labels": "Labels",
     "description": "Select a GitHub issue below to start the planning.",
     "empty": "No issues found",
     "show": "Show issues",

@@ -4,6 +4,7 @@ export type GitHubIssue = {
   title: string;
   assignees: GitHubAssignee[];
   body_html?: string;
+  labels: GitHubLabel[];
 };
 
 export type GitHubAssignee = {
@@ -12,4 +13,10 @@ export type GitHubAssignee = {
    */
   login: string;
   avatar_url: string;
+};
+
+export type GitHubLabel = {
+  color: string;
+  name: string;
+  description: string;
 };

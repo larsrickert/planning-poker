@@ -2,10 +2,12 @@
 import {
   OnyxAvatar,
   OnyxAvatarStack,
+  OnyxBadge,
   OnyxEmpty,
   OnyxLink,
   OnyxSkeleton,
   OnyxTable,
+  OnyxTooltip,
 } from "sit-onyx";
 import type { GitHubIssue } from "~/types/github";
 
@@ -41,6 +43,7 @@ const isOpen = ref(true);
             <th>{{ $t("issues.id") }}</th>
             <th>{{ $t("issues.title") }}</th>
             <th>{{ $t("issues.assignees") }}</th>
+            <th>{{ $t("issues.labels") }}</th>
           </tr>
         </thead>
 
@@ -66,6 +69,23 @@ const isOpen = ref(true);
                 />
               </OnyxAvatarStack>
             </td>
+            <td>
+              <div class="labels">
+                <OnyxTooltip
+                  v-for="label of issue.labels"
+                  :key="label.name"
+                  :text="label.description"
+                  position="bottom"
+                >
+                  <OnyxBadge
+                    density="compact"
+                    :style="`--onyx-badge-background-color: #${label.color}`"
+                  >
+                    {{ label.name }}
+                  </OnyxBadge>
+                </OnyxTooltip>
+              </div>
+            </td>
           </tr>
         </tbody>
       </OnyxTable>
@@ -88,6 +108,7 @@ const isOpen = ref(true);
   max-height: 24rem;
   display: block;
   width: max-content;
+  max-width: 100%;
 
   tbody tr {
     cursor: pointer;
@@ -106,9 +127,22 @@ const isOpen = ref(true);
 
 details {
   width: max-content;
+  max-width: 100%;
 
   summary {
     margin-bottom: var(--onyx-spacing-2xs);
+  }
+}
+
+.labels {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--onyx-spacing-2xs);
+
+  // needed to vertically center the badges
+  :deep(.onyx-tooltip-wrapper div[aria-describedby]) {
+    display: flex;
   }
 }
 </style>

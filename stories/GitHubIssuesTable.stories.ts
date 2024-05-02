@@ -26,6 +26,10 @@ export const Default = {
           { avatar_url: "https://picsum.phototos/100", login: "Jane Doe" },
         ],
         body_html: "<p>HTML body...</p>",
+        labels: [
+          { name: "ux", color: "69CCAB", description: "Requires UX/UI design" },
+          { name: "dev", color: "676A93", description: "Requires technical expertise" },
+        ],
       };
     }),
   },
