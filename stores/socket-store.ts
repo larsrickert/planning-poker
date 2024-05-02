@@ -9,6 +9,7 @@ export type ServerToClientEvents = {
 export type ClientToServerEvents = {
   createLobby: (data: CreateLobbyData) => void;
   joinLobby: (data: JoinLobbyData) => void;
+  selectIssue: (lobbyId: number, issueNumber: number) => void;
 };
 
 export type Lobby = {
@@ -21,6 +22,7 @@ export type Lobby = {
    */
   repository: string;
   users: User[];
+  selectedIssue?: number;
 };
 
 export type CreateLobbyData = Pick<Lobby, "repository"> & {
@@ -137,5 +139,29 @@ export const useSocketStore = defineStore("socket.io", () => {
     });
   };
 
-  return { isConnected, createLobby, isJoiningLobby, lobby, joinLobby, username };
+  /**
+   * Full lobby data for the current user.
+   */
+  const currentUser = computed(() => {
+    return lobby.value?.users.find((i) => i.name === username.value);
+  });
+
+  /**
+   * Selects the given GitHub issue (only for admins).
+   */
+  const selectIssue = (issueNumber: number) => {
+    if (!lobby.value) return;
+    socket.emit("selectIssue", lobby.value.id, issueNumber);
+  };
+
+  return {
+    isConnected,
+    createLobby,
+    isJoiningLobby,
+    lobby,
+    joinLobby,
+    username,
+    currentUser,
+    selectIssue,
+  };
 });

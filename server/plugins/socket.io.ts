@@ -56,6 +56,18 @@ export default defineNitroPlugin((nitroApp) => {
 
       socket.emit("lobbyUpdate", lobby);
     });
+
+    socket.on("selectIssue", (lobbyId, issueNumber) => {
+      // TODO: add error handling when lobby does not exist
+      if (!(lobbyId in LOBBIES)) {
+        console.error(`Tried to select issue for non-existing lobby "${lobbyId}"`);
+        socket.disconnect();
+        return;
+      }
+
+      LOBBIES[lobbyId].selectedIssue = issueNumber;
+      socket.emit("lobbyUpdate", LOBBIES[lobbyId]);
+    });
   });
 
   nitroApp.router.use(

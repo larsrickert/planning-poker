@@ -20,5 +20,11 @@
     "description": "Please set a username in order to use this application.\nFor the best experience, we recommend to use your GitHub username.",
     "submitLabel": "Save",
     "change": "Change username"
+  },
+  "issues": {
+    "id": "Issue",
+    "assignees": "Assignees",
+    "title": "Title",
+    "description": "Select a GitHub issue below to start the planning."
   }
 }
