@@ -17,6 +17,12 @@ importers:
       '@sit-onyx/icons':
         specifier: 0.1.0-alpha.0
         version: 0.1.0-alpha.0
+      '@vue/server-renderer':
+        specifier: ^3.4.26
+        version: 3.4.26(vue@3.4.26(typescript@5.4.5))
+      '@vueuse/core':
+        specifier: ^10.9.0
+        version: 10.9.0(vue@3.4.26(typescript@5.4.5))
       engine.io:
         specifier: ^6.5.4
         version: 6.5.4

@@ -26,7 +26,7 @@ export default defineNitroPlugin((nitroApp) => {
       console.info(`disconnected socket "${socket.id}" due to "${reason}"`);
     });
 
-    socket.on("createLobby", (data) => {
+    socket.on("createLobby", async (data) => {
       // TODO: add error handling when lobby already exists
       const newLobby: Lobby = {
         id: crypto.randomUUID(),
@@ -34,18 +34,24 @@ export default defineNitroPlugin((nitroApp) => {
         users: [{ name: data.username, role: "admin" }],
       };
 
+      await socket.join(newLobby.id);
+
       LOBBIES[newLobby.id] = newLobby;
-      socket.emit("lobbyUpdate", newLobby);
+      io.to(newLobby.id).emit("lobbyUpdate", newLobby);
       console.info(`Created new lobby for "${newLobby.repository}"`);
     });
 
-    socket.on("joinLobby", (data) => {
+    socket.on("joinLobby", async (data) => {
       // TODO: add error handling when lobby does not exist
       if (!(data.id in LOBBIES)) {
         console.error(`Tried to join non-existing lobby "${data.id}"`);
         socket.disconnect();
         return;
       }
+
+      // switch room
+      await Promise.all(Array.from(socket.rooms.values()).map((room) => socket.leave(room)));
+      await socket.join(data.id);
 
       const lobby = LOBBIES[data.id];
 
@@ -54,7 +60,62 @@ export default defineNitroPlugin((nitroApp) => {
         LOBBIES[data.id] = lobby;
       }
 
-      socket.emit("lobbyUpdate", lobby);
+      io.to(lobby.id).emit("lobbyUpdate", lobby);
+    });
+
+    socket.on("selectIssue", (lobbyId, issueNumber) => {
+      // TODO: add error handling when lobby does not exist
+      if (!(lobbyId in LOBBIES)) {
+        console.error(`Tried to select issue for non-existing lobby "${lobbyId}"`);
+        return;
+      }
+
+      const lobby = LOBBIES[lobbyId];
+      lobby.selectedIssue = issueNumber;
+      delete lobby.averageEstimation;
+
+      // reset user estimations
+      lobby.users = lobby.users.map((i) => ({ ...i, estimation: undefined }));
+
+      LOBBIES[lobbyId] = lobby;
+      io.to(lobby.id).emit("lobbyUpdate", lobby);
+    });
+
+    socket.on("estimate", (lobbyId, username, estimation) => {
+      // TODO: add error handling when lobby does not exist
+      if (!(lobbyId in LOBBIES)) {
+        console.error(`Tried to estimate for non-existing lobby "${lobbyId}"`);
+        return;
+      }
+
+      const userIndex = LOBBIES[lobbyId].users.findIndex((i) => i.name === username);
+      if (userIndex === -1) {
+        console.error(
+          `Tried to estimate for non-existing user "${username}" in lobby "${lobbyId}"`,
+        );
+        return;
+      }
+
+      LOBBIES[lobbyId].users[userIndex].estimation = estimation;
+      io.to(lobbyId).emit("lobbyUpdate", LOBBIES[lobbyId]);
+    });
+
+    socket.on("revealEstimations", (lobbyId) => {
+      // TODO: add error handling when lobby does not exist
+      if (!(lobbyId in LOBBIES)) {
+        console.error(`Tried to reveal estimations for non-existing lobby "${lobbyId}"`);
+        return;
+      }
+
+      const estimations = LOBBIES[lobbyId].users
+        .map((i) => i.estimation)
+        .filter((i): i is NonNullable<typeof i> => i !== undefined);
+
+      const average =
+        estimations.reduce((sum, estimation) => sum + estimation, 0) / (estimations.length || 1);
+
+      LOBBIES[lobbyId].averageEstimation = average;
+      io.to(lobbyId).emit("lobbyUpdate", LOBBIES[lobbyId]);
     });
   });
 

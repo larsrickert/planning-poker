@@ -8,4 +8,10 @@ export default withNuxt([
     ...playwright.configs["flat/recommended"],
     files: ["tests/playwright/**"],
   },
+  {
+    files: ["**/*.vue"],
+    rules: {
+      "vue/require-default-prop": "off",
+    },
+  },
 ]);
