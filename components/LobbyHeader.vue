@@ -88,6 +88,7 @@ const props = withDefaults(
     left: 0;
     top: 0;
     background-color: color-mix(in srgb, var(--onyx-color-base-success-500), transparent 20%);
+    color: #fff;
     width: 100%;
     height: 100%;
     border-radius: var(--onyx-radius-full);
