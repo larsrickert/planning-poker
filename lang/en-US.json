@@ -1,5 +1,6 @@
 {
   "appName": "GitHub planning poker",
+  "darkMode": "Dark mode",
   "lobby": {
     "create": {
       "description": "Please create a new lobby for your planning poker.",
