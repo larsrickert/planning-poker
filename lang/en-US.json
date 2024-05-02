@@ -1,5 +1,6 @@
 {
   "appName": "GitHub planning poker",
+  "darkMode": "Dark mode",
   "lobby": {
     "create": {
       "description": "Please create a new lobby for your planning poker.",
@@ -36,6 +37,7 @@
     "description": "Select a GitHub issue below to start the planning.",
     "empty": "No issues found",
     "show": "Show issues",
-    "hide": "Hide issues"
+    "hide": "Hide issues",
+    "emptyBody": "Issue has no description"
   }
 }
