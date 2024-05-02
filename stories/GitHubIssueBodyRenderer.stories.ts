@@ -18,6 +18,8 @@ export const Default = {
     issue: {
       number: 42,
       title: "Issue title",
+      assignees: [],
+      html_url: "https://github.com/owner/repository/issues/42",
       body_html: `
       <h1>Headline</h1>
       <h2>Headline</h2>

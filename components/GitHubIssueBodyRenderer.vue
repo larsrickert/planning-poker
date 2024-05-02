@@ -6,7 +6,7 @@ import type { VNode } from "vue";
 import type { GitHubIssue } from "~/types/github";
 
 const props = defineProps<{
-  issue: Pick<GitHubIssue, "number" | "title" | "body_html">;
+  issue: GitHubIssue;
 }>();
 
 const REPLACEMENTS = [
@@ -96,7 +96,10 @@ const html = computedAsync(async () => {
 <template>
   <div class="issue">
     <OnyxHeadline is="h2" class="issue__headline">
-      #{{ props.issue.number }}: {{ props.issue.title }}
+      <OnyxLink :href="props.issue.html_url" target="_blank" :with-external-icon="false">
+        #{{ props.issue.number }}
+      </OnyxLink>
+      {{ props.issue.title }}
     </OnyxHeadline>
 
     <div class="issue__body" v-html="html" />
