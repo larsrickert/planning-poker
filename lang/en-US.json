@@ -6,13 +6,14 @@
       "submitLabel": "Create new lobby",
       "githubRepo": {
         "label": "GitHub repository",
-        "placeholder": "org/repository"
+        "placeholder": "owner/repository"
       }
     },
     "notFound": {
       "text": "Lobby not found.\nGo back to the {link}.",
       "link": "home page"
-    }
+    },
+    "headline": "Planning poker for"
   },
   "username": {
     "label": "Username",
@@ -25,6 +26,7 @@
     "id": "Issue",
     "assignees": "Assignees",
     "title": "Title",
-    "description": "Select a GitHub issue below to start the planning."
+    "description": "Select a GitHub issue below to start the planning.",
+    "empty": "No issues found"
   }
 }

@@ -28,6 +28,18 @@ export const Default = {
         body_html: "<p>HTML body...</p>",
       };
     }),
-    repository: "org/repository",
+  },
+} satisfies Story;
+
+export const Skeleton = {
+  args: {
+    issues: [],
+    skeleton: true,
+  },
+} satisfies Story;
+
+export const Empty = {
+  args: {
+    issues: [],
   },
 } satisfies Story;

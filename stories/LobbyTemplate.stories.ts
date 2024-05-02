@@ -19,7 +19,7 @@ export const Default = {
     role: "admin",
     lobby: {
       id: "lobby-1",
-      repository: "org/repository",
+      repository: "owner/repository",
       users: Array.from({ length: 8 }, (_, index) => ({
         name: index === 0 ? "larsrickert" : `User ${index + 1}`,
         role: index === 0 ? "admin" : "user",
@@ -31,14 +31,16 @@ export const Default = {
 
 export const Loading = {
   args: {
-    ...Default.args,
+    role: "admin",
     loading: true,
   },
 } satisfies Story;
 
-export const Empty = {
+export const IssuesLoading = {
   args: {
     ...Default.args,
-    lobby: undefined,
+    issuesLoading: true,
   },
 } satisfies Story;
+
+export const Empty = { args: {} } satisfies Story;

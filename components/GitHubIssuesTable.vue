@@ -1,11 +1,18 @@
 <script lang="ts" setup>
-import { OnyxAvatar, OnyxAvatarStack, OnyxLink, OnyxTable } from "sit-onyx";
+import {
+  OnyxAvatar,
+  OnyxAvatarStack,
+  OnyxEmpty,
+  OnyxLink,
+  OnyxSkeleton,
+  OnyxTable,
+} from "sit-onyx";
 import type { GitHubIssue } from "~/types/github";
 
 const props = defineProps<{
   issues: GitHubIssue[];
-  repository: string;
   selectedIssue?: number;
+  skeleton?: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -17,7 +24,13 @@ const emit = defineEmits<{
   <div>
     <p class="description">{{ $t("issues.description") }}</p>
 
-    <OnyxTable striped grid>
+    <OnyxSkeleton v-if="props.skeleton" class="table-skeleton" />
+
+    <OnyxEmpty v-else-if="!props.issues.length">
+      {{ $t("issues.empty") }}
+    </OnyxEmpty>
+
+    <OnyxTable v-else striped grid>
       <thead>
         <tr>
           <th>{{ $t("issues.id") }}</th>
@@ -57,6 +70,11 @@ const emit = defineEmits<{
 <style lang="scss" scoped>
 .description {
   margin-bottom: var(--onyx-spacing-md);
+}
+
+.table-skeleton {
+  width: 24rem;
+  height: 12rem;
 }
 
 .onyx-table {
