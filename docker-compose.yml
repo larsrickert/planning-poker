@@ -4,5 +4,13 @@ services:
   app:
     build: .
     restart: unless-stopped
-    ports:
-      - "80:80"
+    # ports:
+    #   - "3000:3000"
+    environment:
+      VIRTUAL_HOST: planning.lars-rickert.de
+      LETSENCRYPT_HOST: planning.lars-rickert.de
+
+networks:
+  default:
+    name: nginx-proxy
+    external: true

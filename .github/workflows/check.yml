@@ -29,9 +29,6 @@ jobs:
       - name: 🛠️ Build
         run: pnpm build
 
-      - name: 🛠️ Generate static site
-        run: pnpm generate
-
       - name: 🧪 Run unit tests
         run: pnpm test
 
