@@ -1,7 +1,10 @@
 <script lang="ts" setup>
-import { OnyxEmpty, OnyxLink } from "sit-onyx";
+import { OnyxEmpty, OnyxHeadline, OnyxLink } from "sit-onyx";
 import type { GitHubIssue } from "~/types/github";
+import EstimationCard from "./EstimationCard.vue";
 import type LobbyHeader from "./LobbyHeader.vue";
+
+const AVAILABLE_ESTIMATIONS = [1, 2, 3, 5, 8, 13] as const;
 
 const props = withDefaults(
   defineProps<{
@@ -10,9 +13,9 @@ const props = withDefaults(
      */
     lobby?: Lobby;
     /**
-     * Role of the current user. Will determine which features are enabled.
+     * Current username. Will determine which features are enabled based on the user role.
      */
-    role?: UserRole;
+    currentUser?: string;
     /**
      * Whether the user is currently joining the lobby.
      */
@@ -27,18 +30,27 @@ const props = withDefaults(
     issues?: GitHubIssue[];
   }>(),
   {
-    role: "user",
     issues: () => [],
   },
 );
 
 const emit = defineEmits<{
   selectIssue: [number: number];
+  /**
+   * Emitted when the users selects an estimation for the current issue.
+   */
+  estimate: [value: number];
 }>();
 
 const selectedIssue = computed(() => {
   return props.issues?.find((i) => i.number === props.lobby?.selectedIssue);
 });
+
+const user = computed(() => {
+  return props.lobby?.users.find((i) => i.name === props.currentUser);
+});
+
+const userRole = computed(() => user.value?.role ?? "user");
 </script>
 
 <template>
@@ -59,7 +71,7 @@ const selectedIssue = computed(() => {
     </OnyxEmpty>
 
     <GitHubIssuesTable
-      v-if="props.role === 'admin'"
+      v-if="userRole === 'admin'"
       class="lobby__table"
       :issues="props.issues ?? []"
       :selected-issue="props.lobby?.selectedIssue"
@@ -67,7 +79,21 @@ const selectedIssue = computed(() => {
       @select="emit('selectIssue', $event)"
     />
 
-    <GitHubIssueBodyRenderer v-if="selectedIssue" :issue="selectedIssue" />
+    <template v-if="selectedIssue">
+      <OnyxHeadline is="h3">{{ $t("lobby.estimation.headline") }}</OnyxHeadline>
+
+      <div class="lobby__estimations">
+        <EstimationCard
+          v-for="i in AVAILABLE_ESTIMATIONS"
+          :key="i"
+          :value="i"
+          :selected="user?.estimation === i"
+          @click="emit('estimate', i)"
+        />
+      </div>
+
+      <GitHubIssueBodyRenderer :issue="selectedIssue" />
+    </template>
   </div>
 </template>
 
@@ -79,6 +105,14 @@ const selectedIssue = computed(() => {
 
   &__table {
     margin-bottom: var(--onyx-spacing-3xl);
+  }
+
+  &__estimations {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--onyx-spacing-xs);
+    margin-top: var(--onyx-spacing-xs);
+    margin-bottom: var(--onyx-spacing-lg);
   }
 }
 </style>

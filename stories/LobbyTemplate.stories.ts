@@ -7,7 +7,7 @@ const meta = {
   title: "pages/Lobby",
   ...defineStorybookActionsAndVModels({
     component: LobbyTemplate,
-    events: ["selectIssue"],
+    events: ["selectIssue", "estimate"],
   }),
 };
 
@@ -16,7 +16,7 @@ type Story = StoryObj<typeof LobbyTemplate>;
 
 export const Default = {
   args: {
-    role: "admin",
+    currentUser: "larsrickert",
     lobby: {
       id: "lobby-1",
       repository: "owner/repository",
@@ -31,7 +31,7 @@ export const Default = {
 
 export const Loading = {
   args: {
-    role: "admin",
+    ...Default.args,
     loading: true,
   },
 } satisfies Story;

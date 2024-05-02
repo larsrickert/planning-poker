@@ -61,11 +61,35 @@ export default defineNitroPlugin((nitroApp) => {
       // TODO: add error handling when lobby does not exist
       if (!(lobbyId in LOBBIES)) {
         console.error(`Tried to select issue for non-existing lobby "${lobbyId}"`);
-        socket.disconnect();
         return;
       }
 
-      LOBBIES[lobbyId].selectedIssue = issueNumber;
+      const lobby = LOBBIES[lobbyId];
+      lobby.selectedIssue = issueNumber;
+
+      // reset user estimations
+      lobby.users = lobby.users.map((i) => ({ ...i, estimation: undefined }));
+
+      LOBBIES[lobbyId] = lobby;
+      socket.emit("lobbyUpdate", lobby);
+    });
+
+    socket.on("estimate", (lobbyId, username, estimation) => {
+      // TODO: add error handling when lobby does not exist
+      if (!(lobbyId in LOBBIES)) {
+        console.error(`Tried to estimate for non-existing lobby "${lobbyId}"`);
+        return;
+      }
+
+      const userIndex = LOBBIES[lobbyId].users.findIndex((i) => i.name === username);
+      if (userIndex === -1) {
+        console.error(
+          `Tried to estimate for non-existing user "${username}" in lobby "${lobbyId}"`,
+        );
+        return;
+      }
+
+      LOBBIES[lobbyId].users[userIndex].estimation = estimation;
       socket.emit("lobbyUpdate", LOBBIES[lobbyId]);
     });
   });

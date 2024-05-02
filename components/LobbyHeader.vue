@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { OnyxAvatar, OnyxHeadline, OnyxSkeleton, OnyxTooltip } from "sit-onyx";
+import check from "@sit-onyx/icons/check.svg?raw";
+import { OnyxAvatar, OnyxHeadline, OnyxIcon, OnyxSkeleton, OnyxTooltip } from "sit-onyx";
 import type { User } from "../stores/socket-store";
 
 const props = withDefaults(
@@ -35,7 +36,11 @@ const props = withDefaults(
           :key="user.name"
           :text="user.name"
           position="bottom"
+          class="avatar"
         >
+          <div v-if="user.estimation != undefined" class="avatar__overlay">
+            <OnyxIcon :icon="check" />
+          </div>
           <OnyxAvatar :src="`https://github.com/${user.name}.png`" :label="user.name" />
         </OnyxTooltip>
       </ClientOnly>
@@ -73,5 +78,23 @@ const props = withDefaults(
   width: 3rem;
   height: 3rem;
   border-radius: var(--onyx-radius-full);
+}
+
+.avatar {
+  position: relative;
+
+  &__overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: color-mix(in srgb, var(--onyx-color-base-success-500), transparent 20%);
+    width: 100%;
+    height: 100%;
+    border-radius: var(--onyx-radius-full);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 </style>

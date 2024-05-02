@@ -13,7 +13,10 @@
       "text": "Lobby not found.\nGo back to the {link}.",
       "link": "home page"
     },
-    "headline": "Planning poker for"
+    "headline": "Planning poker for",
+    "estimation": {
+      "headline": "Select an estimation"
+    }
   },
   "username": {
     "label": "Username",

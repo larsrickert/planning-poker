@@ -11,34 +11,46 @@ watchEffect(() => {
   socketStore.joinLobby(id);
 });
 
+const isIssuesLoading = ref(false);
+
+const repository = computed(() => socketStore.lobby?.repository);
+
 /**
  * @see https://docs.github.com/en/rest/issues/issues?apiVersion=2022-11-28#list-repository-issues
  */
-const issues = computedAsync(async () => {
-  if (!socketStore.lobby) return [];
+const issues = computedAsync(
+  async () => {
+    if (!repository.value) return [];
 
-  // TODO: implement pagination
-  const response = await fetch(
-    `https://api.github.com/repos/${socketStore.lobby.repository}/issues?per_page=100`,
-    {
-      headers: {
-        "X-GitHub-Api-Version": "2022-11-28",
-        Accept: "application/vnd.github.html+json",
+    // TODO: implement pagination
+    const response = await fetch(
+      `https://api.github.com/repos/${repository.value}/issues?per_page=100`,
+      {
+        headers: {
+          "X-GitHub-Api-Version": "2022-11-28",
+          Accept: "application/vnd.github.html+json",
+        },
       },
-    },
-  );
+    );
 
-  if (!response.ok) return [];
-  return await response.json();
-}, []);
+    if (!response.ok) return [];
+    return await response.json();
+  },
+  [],
+  {
+    evaluating: isIssuesLoading,
+  },
+);
 </script>
 
 <template>
   <LobbyTemplate
     :lobby="socketStore.lobby"
     :loading="socketStore.isJoiningLobby || !socketStore.username"
-    :role="socketStore.currentUser?.role ?? 'user'"
+    :issues-loading="isIssuesLoading"
+    :current-user="socketStore.username"
     :issues="issues"
     @select-issue="socketStore.selectIssue"
+    @estimate="socketStore.estimate"
   />
 </template>

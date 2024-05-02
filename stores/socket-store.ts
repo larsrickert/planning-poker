@@ -9,7 +9,8 @@ export type ServerToClientEvents = {
 export type ClientToServerEvents = {
   createLobby: (data: CreateLobbyData) => void;
   joinLobby: (data: JoinLobbyData) => void;
-  selectIssue: (lobbyId: number, issueNumber: number) => void;
+  selectIssue: (lobbyId: string, issueNumber: number) => void;
+  estimate: (lobbyId: string, username: string, estimation: number) => void;
 };
 
 export type Lobby = {
@@ -36,6 +37,7 @@ export type JoinLobbyData = Pick<Lobby, "id"> & {
 export type User = {
   name: string;
   role: UserRole;
+  estimation?: number;
 };
 
 export type UserRole = "admin" | "user";
@@ -154,6 +156,14 @@ export const useSocketStore = defineStore("socket.io", () => {
     socket.emit("selectIssue", lobby.value.id, issueNumber);
   };
 
+  /**
+   * Selects the given estimation for the current user.
+   */
+  const estimate = (estimation: number) => {
+    if (!lobby.value) return;
+    socket.emit("estimate", lobby.value.id, username.value, estimation);
+  };
+
   return {
     isConnected,
     createLobby,
@@ -163,5 +173,6 @@ export const useSocketStore = defineStore("socket.io", () => {
     username,
     currentUser,
     selectIssue,
+    estimate,
   };
 });
