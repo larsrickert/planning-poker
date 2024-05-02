@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { computedAsync } from "@vueuse/core";
+import type { GitHubIssue } from "../../types/github";
 
 const route = useRoute();
 const socketStore = useSocketStore();
@@ -24,7 +25,7 @@ const issues = computedAsync(
 
     // TODO: implement pagination
     const response = await fetch(
-      `https://api.github.com/repos/${repository.value}/issues?per_page=100`,
+      `https://api.github.com/search/issues?per_page=100&q=${encodeURIComponent(`is:issue state:open repo:${repository.value}`)}`,
       {
         headers: {
           "X-GitHub-Api-Version": "2022-11-28",
@@ -34,7 +35,8 @@ const issues = computedAsync(
     );
 
     if (!response.ok) return [];
-    return await response.json();
+    const data = await response.json();
+    return data.items as GitHubIssue[];
   },
   [],
   {
