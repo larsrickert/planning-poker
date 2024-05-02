@@ -1,17 +1,17 @@
 import { defineStorybookActionsAndVModels } from "@sit-onyx/storybook-utils";
 import type { StoryObj } from "@storybook/vue3";
-import CreateLobbyForm from "~/components/CreateLobbyForm.vue";
+import CreateRoomForm from "~/components/CreateRoomForm.vue";
 
 const meta = {
-  title: "components/CreateLobbyForm",
+  title: "components/CreateRoomForm",
   ...defineStorybookActionsAndVModels({
-    component: CreateLobbyForm,
+    component: CreateRoomForm,
     events: ["submit"],
   }),
 };
 
 export default meta;
-type Story = StoryObj<typeof CreateLobbyForm>;
+type Story = StoryObj<typeof CreateRoomForm>;
 
 export const Default = { args: {} } satisfies Story;
 

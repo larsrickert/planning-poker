@@ -1,29 +1,21 @@
 <script lang="ts" setup>
 import check from "@sit-onyx/icons/check.svg?raw";
 import { OnyxAvatar, OnyxHeadline, OnyxIcon, OnyxSkeleton, OnyxTooltip } from "sit-onyx";
-import type { User } from "../stores/socket-store";
+import type { RoomDto } from "~/server/types";
 
-const props = withDefaults(
-  defineProps<{
-    repository?: string;
-    skeleton?: boolean;
-    users?: User[];
-    showEstimations?: boolean;
-  }>(),
-  {
-    repository: "N/A",
-    users: () => [],
-  },
-);
+const props = defineProps<{
+  room?: RoomDto;
+  skeleton?: boolean;
+}>();
 </script>
 
 <template>
   <div class="header">
     <OnyxHeadline is="h2">
-      {{ $t("lobby.headline") }}:
+      {{ $t("room.headline") }}:
 
       <OnyxSkeleton v-if="props.skeleton" class="header__repository--skeleton" />
-      <span v-else class="header__repository">{{ props.repository }}</span>
+      <span v-else class="header__repository">{{ props.room?.repository.name ?? "N/A" }}</span>
     </OnyxHeadline>
 
     <div class="header__users">
@@ -33,17 +25,19 @@ const props = withDefaults(
 
       <ClientOnly v-else>
         <OnyxTooltip
-          v-for="user of props.users"
-          :key="user.name"
-          :text="user.name"
+          v-for="user of props.room?.users"
+          :key="user.username"
+          :text="user.username"
           position="bottom"
           class="avatar"
         >
-          <div v-if="user.estimation != undefined" class="avatar__overlay">
-            <span v-if="props.showEstimations">{{ user.estimation }}</span>
+          <div v-if="props.room?.estimations[user.id]" class="avatar__overlay">
+            <span v-if="props.room.averageEstimation">
+              {{ props.room.estimations[user.id] }}
+            </span>
             <OnyxIcon v-else :icon="check" />
           </div>
-          <OnyxAvatar :src="`https://github.com/${user.name}.png`" :label="user.name" />
+          <OnyxAvatar :src="user.avatar" :label="user.username" />
         </OnyxTooltip>
       </ClientOnly>
     </div>

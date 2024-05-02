@@ -1,7 +1,8 @@
 import { Server as Engine } from "engine.io";
 import { defineEventHandler } from "h3";
 import { Server } from "socket.io";
-import type { ClientToServerEvents, Lobby, ServerToClientEvents } from "~/stores/socket-store";
+import { createRoom } from "../rooms";
+import type { ClientToServerEvents, Room, ServerToClientEvents } from "../types";
 
 /**
  * Socket.io plugin.
@@ -10,112 +11,135 @@ import type { ClientToServerEvents, Lobby, ServerToClientEvents } from "~/stores
  */
 export default defineNitroPlugin((nitroApp) => {
   const engine = new Engine();
-  const io = new Server<ClientToServerEvents, ServerToClientEvents>();
+  const io = new Server<
+    ClientToServerEvents,
+    ServerToClientEvents,
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    {},
+    {
+      userId?: string;
+    }
+  >();
   io.bind(engine);
 
   /**
-   * Map that holds all current lobbies.
-   * Key = ID.
+   * Map that holds all current rooms.
+   * Key = room ID.
    */
-  const LOBBIES: Record<string, Lobby> = {};
+  const ROOMS = new Map<string, Room>();
 
   io.on("connection", (socket) => {
     console.info(`connected socket "${socket.id}"`);
 
     socket.on("disconnect", (reason) => {
       console.info(`disconnected socket "${socket.id}" due to "${reason}"`);
+
+      // TODO: delete room if no users are joined for a certain timeout
     });
 
-    socket.on("createLobby", async (data) => {
-      // TODO: add error handling when lobby already exists
-      const newLobby: Lobby = {
-        id: crypto.randomUUID(),
-        repository: data.repository,
-        users: [{ name: data.username, role: "admin" }],
-      };
+    /**
+     * Emits the current data for the given room to all
+     * subscribed room users.
+     */
+    const emitUpdate = (roomId: string) => {
+      if (!ROOMS.has(roomId)) return;
+      io.to(roomId).emit("roomUpdate", ROOMS.get(roomId)!);
+    };
 
-      await socket.join(newLobby.id);
+    /**
+     * Connects to the given room and leaves all other rooms.
+     */
+    const switchRoom = async (roomId: string) => {
+      // switch room
+      await Promise.all(Array.from(socket.rooms.values()).map((room) => socket.leave(room)));
+      await socket.join(roomId);
+    };
 
-      LOBBIES[newLobby.id] = newLobby;
-      io.to(newLobby.id).emit("lobbyUpdate", newLobby);
-      console.info(`Created new lobby for "${newLobby.repository}"`);
+    socket.on("createRoom", async (...args) => {
+      const room = createRoom(...args);
+      socket.data.userId = room.moderator;
+      await switchRoom(room.id);
+
+      ROOMS.set(room.id, room);
+      emitUpdate(room.id);
+      console.info(`Created new room for "${room.repository.name}", id: ${room.id}`);
     });
 
-    socket.on("joinLobby", async (data) => {
-      // TODO: add error handling when lobby does not exist
-      if (!(data.id in LOBBIES)) {
-        console.error(`Tried to join non-existing lobby "${data.id}"`);
+    socket.on("join", async (roomId, ...args) => {
+      if (!ROOMS.has(roomId)) {
+        console.error(`Tried to join non-existing room "${roomId}"`);
         socket.disconnect();
         return;
       }
 
-      // switch room
-      await Promise.all(Array.from(socket.rooms.values()).map((room) => socket.leave(room)));
-      await socket.join(data.id);
+      await switchRoom(roomId);
+      const room = ROOMS.get(roomId)!;
+      const user = room.join(...args);
+      socket.data.userId = user.id;
 
-      const lobby = LOBBIES[data.id];
-
-      if (!lobby.users.find((i) => i.name === data.username)) {
-        lobby.users.push({ name: data.username, role: "user" });
-        LOBBIES[data.id] = lobby;
-      }
-
-      io.to(lobby.id).emit("lobbyUpdate", lobby);
+      emitUpdate(roomId);
+      console.info(`User "${args[0]}" joined room "${room.id}"`);
     });
 
-    socket.on("selectIssue", (lobbyId, issueNumber) => {
-      // TODO: add error handling when lobby does not exist
-      if (!(lobbyId in LOBBIES)) {
-        console.error(`Tried to select issue for non-existing lobby "${lobbyId}"`);
+    socket.on("selectStory", (roomId, ...args) => {
+      if (!ROOMS.has(roomId)) {
+        console.error(`Tried to select issue for non-existing room "${roomId}"`);
         return;
       }
 
-      const lobby = LOBBIES[lobbyId];
-      lobby.selectedIssue = issueNumber;
-      delete lobby.averageEstimation;
+      const room = ROOMS.get(roomId)!;
 
-      // reset user estimations
-      lobby.users = lobby.users.map((i) => ({ ...i, estimation: undefined }));
-
-      LOBBIES[lobbyId] = lobby;
-      io.to(lobby.id).emit("lobbyUpdate", lobby);
-    });
-
-    socket.on("estimate", (lobbyId, username, estimation) => {
-      // TODO: add error handling when lobby does not exist
-      if (!(lobbyId in LOBBIES)) {
-        console.error(`Tried to estimate for non-existing lobby "${lobbyId}"`);
-        return;
-      }
-
-      const userIndex = LOBBIES[lobbyId].users.findIndex((i) => i.name === username);
-      if (userIndex === -1) {
+      if (socket.data.userId !== room.moderator) {
         console.error(
-          `Tried to estimate for non-existing user "${username}" in lobby "${lobbyId}"`,
+          `User "${socket.data.userId}" tried to select story for room "${roomId}" but he is not the moderator`,
         );
         return;
       }
 
-      LOBBIES[lobbyId].users[userIndex].estimation = estimation;
-      io.to(lobbyId).emit("lobbyUpdate", LOBBIES[lobbyId]);
+      room.selectStory(...args);
+      emitUpdate(roomId);
+      console.info(`Selected story "${args[0]}" for room "${room.id}"`);
     });
 
-    socket.on("revealEstimations", (lobbyId) => {
-      // TODO: add error handling when lobby does not exist
-      if (!(lobbyId in LOBBIES)) {
-        console.error(`Tried to reveal estimations for non-existing lobby "${lobbyId}"`);
+    socket.on("estimate", (roomId, ...args) => {
+      if (!ROOMS.has(roomId)) {
+        console.error(`Tried to estimate for non-existing room "${roomId}"`);
         return;
       }
 
-      const estimations = LOBBIES[lobbyId].users
-        .map((i) => i.estimation)
-        .filter((i): i is NonNullable<typeof i> => i !== undefined);
+      const room = ROOMS.get(roomId)!;
 
-      const average =
-        estimations.reduce((sum, estimation) => sum + estimation, 0) / (estimations.length || 1);
+      if (!socket.data.userId) {
+        console.error(
+          `User of room "${roomId}" tried to estimate but socket has not userId attached.`,
+        );
+        return;
+      }
 
-      LOBBIES[lobbyId].averageEstimation = average;
-      io.to(lobbyId).emit("lobbyUpdate", LOBBIES[lobbyId]);
+      // TODO: update arg types
+      room.estimate(socket.data.userId, args[1]);
+      emitUpdate(roomId);
+      console.info(`Estimated for user "${args[0]}" in room "${roomId}"`);
+    });
+
+    socket.on("endEstimation", (roomId) => {
+      if (!ROOMS.has(roomId)) {
+        console.error(`Tried to end estimation for non-existing room "${roomId}"`);
+        return;
+      }
+
+      const room = ROOMS.get(roomId)!;
+
+      if (socket.data.userId !== room.moderator) {
+        console.error(
+          `User "${socket.data.userId}" tried to end estimation for room "${roomId}" but he is not the moderator`,
+        );
+        return;
+      }
+
+      room.endEstimation();
+      emitUpdate(roomId);
+      console.info(`Ended estimation for room "${roomId}"`);
     });
   });
 

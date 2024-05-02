@@ -24,8 +24,8 @@ const handleSubmit = () => {
   <form class="form" @submit.prevent="handleSubmit">
     <OnyxInput
       v-model="repository"
-      :label="$t('lobby.create.githubRepo.label')"
-      :placeholder="$t('lobby.create.githubRepo.placeholder')"
+      :label="$t('room.create.githubRepo.label')"
+      :placeholder="$t('room.create.githubRepo.placeholder')"
       :pattern="/\S+\/\S+/"
       autocapitalize="none"
       :readonly="props.loading"
@@ -33,7 +33,7 @@ const handleSubmit = () => {
     />
 
     <OnyxButton
-      :label="$t('lobby.create.submitLabel')"
+      :label="$t('room.create.submitLabel')"
       type="submit"
       mode="outline"
       :icon="plusSmall"
