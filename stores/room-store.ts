@@ -96,6 +96,14 @@ export const useRoomStore = defineStore("room", () => {
     socket.emit("endEstimation", room.value.id);
   };
 
+  watch(
+    () => authStore.username,
+    (newName, oldName) => {
+      if (!newName || !oldName || !room.value) return;
+      socket.emit("changeName", room.value.id, oldName, newName);
+    },
+  );
+
   return {
     createRoom,
     isJoining,
