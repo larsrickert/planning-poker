@@ -140,6 +140,17 @@ export default defineNitroPlugin((nitroApp) => {
       emitUpdate(roomId);
       console.info(`Ended estimation for room "${roomId}"`);
     });
+
+    socket.on("changeName", (roomId, ...args) => {
+      if (!ROOMS.has(roomId)) {
+        console.error(`Tried to change name for non-existing room "${roomId}"`);
+        return;
+      }
+
+      const room = ROOMS.get(roomId)!;
+      room.changeName(...args);
+      emitUpdate(roomId);
+    });
   });
 
   nitroApp.router.use(

@@ -48,6 +48,14 @@ export const createRoom = (moderatorName: string, repositoryName: string) => {
 
       room.averageEstimation = Math.round(average * 10) / 10;
     },
+    changeName: (oldName, newName) => {
+      const index = users.findIndex(({ username }) => username === oldName);
+      if (index === -1) return;
+      users[index] = {
+        ...createUser(newName),
+        id: users[index].id,
+      };
+    },
   };
 
   return room;
