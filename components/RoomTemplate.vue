@@ -95,6 +95,7 @@ const votedUsers = computed(() => props.room?.users.filter((i) => i.estimation).
           <EstimationCard
             v-for="i in AVAILABLE_ESTIMATIONS"
             :key="i"
+            class="estimation"
             :value="i"
             :selected="user?.estimation === i"
             @click="emit('estimate', i)"
@@ -102,7 +103,6 @@ const votedUsers = computed(() => props.room?.users.filter((i) => i.estimation).
 
           <OnyxButton
             v-if="isModerator"
-            class="estimations__reveal"
             :label="
               $t('room.estimation.reveal', {
                 n: votedUsers,
@@ -143,8 +143,8 @@ const votedUsers = computed(() => props.room?.users.filter((i) => i.estimation).
   gap: var(--onyx-spacing-xs);
   margin-top: var(--onyx-spacing-xs);
 
-  &__reveal {
-    margin-left: var(--onyx-spacing-2xl);
+  .estimation:nth-last-child(2) {
+    margin-right: var(--onyx-spacing-2xl);
   }
 }
 </style>

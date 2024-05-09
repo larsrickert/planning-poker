@@ -51,6 +51,7 @@ const isDark = computed({
 .header {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   justify-content: space-between;
   gap: var(--onyx-spacing-xs);
 

@@ -100,6 +100,7 @@ const isOpen = ref(true);
 
 .table-skeleton {
   width: 24rem;
+  max-width: 100%;
   height: 12rem;
 }
 

@@ -48,7 +48,7 @@ const props = defineProps<{
 .header {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--onyx-spacing-lg);
+  gap: var(--onyx-spacing-2xs) var(--onyx-spacing-lg);
   align-items: center;
   justify-content: space-between;
 
