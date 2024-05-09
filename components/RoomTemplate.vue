@@ -1,27 +1,27 @@
 <script lang="ts" setup>
 import { OnyxButton, OnyxEmpty, OnyxHeadline, OnyxLink } from "sit-onyx";
+import type { RoomDto } from "~/server/types";
 import type { GitHubIssue } from "~/types/github";
 import EstimationCard from "./EstimationCard.vue";
-import type LobbyHeader from "./LobbyHeader.vue";
 
 const AVAILABLE_ESTIMATIONS = [1, 2, 3, 5, 8, 13] as const;
 
 const props = withDefaults(
   defineProps<{
     /**
-     * Currently lobby state.
+     * Currently room state.
      */
-    lobby?: Lobby;
+    room?: RoomDto;
     /**
      * Current username. Will determine which features are enabled based on the user role.
      */
     currentUser?: string;
     /**
-     * Whether the user is currently joining the lobby.
+     * Whether the user is currently joining the room.
      */
     loading?: boolean;
     /**
-     * Whether the issues are currently loading.
+     * Whether the GitHub issues are currently loading.
      */
     issuesLoading?: boolean;
     /**
@@ -35,68 +35,60 @@ const props = withDefaults(
 );
 
 const emit = defineEmits<{
-  selectIssue: [number: number];
+  selectStory: [number: number];
   /**
-   * Emitted when the users selects an estimation for the current issue.
+   * Emitted when the users selects an estimation for the current story.
    */
   estimate: [value: number];
-  revealEstimations: [];
+  endEstimation: [];
 }>();
 
 const selectedIssue = computed(() => {
-  return props.issues?.find((i) => i.number === props.lobby?.selectedIssue);
+  return props.issues?.find((i) => i.number === props.room?.selectedStory);
 });
 
 const user = computed(() => {
-  return props.lobby?.users.find((i) => i.name === props.currentUser);
+  return props.room?.users.find((i) => i.username === props.currentUser);
 });
 
-const userRole = computed(() => user.value?.role ?? "user");
+const isModerator = computed(() => user.value?.id === props.room?.moderator);
 
-const votedUsers = computed(
-  () => props.lobby?.users.filter((i) => i.estimation != undefined).length,
-);
+const votedUsers = computed(() => props.room?.users.filter((i) => i.estimation).length ?? 0);
 </script>
 
 <template>
-  <div class="lobby">
-    <LobbyHeader
-      class="lobby__header"
-      :repository="props.lobby?.repository"
-      :users="props.lobby?.users"
-      :skeleton="props.loading"
-      :show-estimations="props.lobby?.averageEstimation != undefined"
-    />
+  <div class="room">
+    <RoomHeader class="room__header" :room="props.room" :skeleton="props.loading" />
 
-    <OnyxEmpty v-if="!props.loading && !props.lobby">
-      <i18n-t keypath="lobby.notFound.text">
+    <OnyxEmpty v-if="!props.loading && !props.room">
+      <i18n-t keypath="room.notFound.text">
         <template #link>
-          <OnyxLink href="/">{{ $t("lobby.notFound.link") }}</OnyxLink>
+          <OnyxLink href="/">{{ $t("room.notFound.link") }}</OnyxLink>
         </template>
       </i18n-t>
     </OnyxEmpty>
 
     <GitHubIssuesTable
-      v-if="userRole === 'admin'"
-      class="lobby__table"
+      v-else-if="isModerator"
+      class="room__table"
       :issues="props.issues ?? []"
-      :selected-issue="props.lobby?.selectedIssue"
+      :selected-issue="props.room?.selectedStory"
       :skeleton="props.loading || props.issuesLoading"
-      @select="emit('selectIssue', $event)"
+      @select="emit('selectStory', $event)"
     />
 
     <p v-else-if="!selectedIssue">
-      {{ $t("lobby.waitingForAdmin") }}
+      {{ $t("room.waitingForModerator") }}
     </p>
 
     <template v-if="selectedIssue">
-      <template v-if="props.lobby?.averageEstimation != undefined">
-        <OnyxHeadline is="h3" class="average"> {{ $t("lobby.estimation.average") }}: </OnyxHeadline>
-        <span class="average__value">{{ props.lobby.averageEstimation }}</span>
+      <template v-if="props.room?.averageEstimation != undefined">
+        <OnyxHeadline is="h3" class="average"> {{ $t("room.estimation.average") }}: </OnyxHeadline>
+        <span class="average__value">{{ props.room.averageEstimation }}</span>
       </template>
 
       <template v-else>
-        <OnyxHeadline is="h3">{{ $t("lobby.estimation.headline") }}</OnyxHeadline>
+        <OnyxHeadline is="h3">{{ $t("room.estimation.headline") }}</OnyxHeadline>
 
         <div class="estimations">
           <EstimationCard
@@ -108,28 +100,28 @@ const votedUsers = computed(
           />
 
           <OnyxButton
-            v-if="userRole === 'admin'"
+            v-if="isModerator"
             class="estimations__reveal"
             :label="
-              $t('lobby.estimation.reveal', {
+              $t('room.estimation.reveal', {
                 n: votedUsers,
-                count: props.lobby?.users.length ?? 0,
+                count: props.room?.users.length ?? 0,
               })
             "
             variation="secondary"
             mode="outline"
-            @click="emit('revealEstimations')"
+            @click="emit('endEstimation')"
           />
         </div>
       </template>
 
-      <GitHubIssueBodyRenderer class="lobby__issue" :issue="selectedIssue" />
+      <GitHubIssueBodyRenderer class="room__issue" :issue="selectedIssue" />
     </template>
   </div>
 </template>
 
 <style lang="scss" scoped>
-.lobby {
+.room {
   &__header {
     margin-bottom: var(--onyx-spacing-md);
   }

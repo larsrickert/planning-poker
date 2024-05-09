@@ -1,17 +1,17 @@
 {
   "appName": "GitHub planning poker",
   "darkMode": "Dark mode",
-  "lobby": {
+  "room": {
     "create": {
-      "description": "Please create a new lobby for your planning poker.",
-      "submitLabel": "Create new lobby",
+      "description": "Please create a new room for your planning poker.",
+      "submitLabel": "Create new room",
       "githubRepo": {
         "label": "GitHub repository",
         "placeholder": "owner/repository"
       }
     },
     "notFound": {
-      "text": "Lobby not found.\nGo back to the {link}.",
+      "text": "Room not found.\nGo back to the {link}.",
       "link": "home page"
     },
     "headline": "Planning poker for",
@@ -20,7 +20,7 @@
       "reveal": "Reveal votes ({n} of {count})",
       "average": "Average estimation"
     },
-    "waitingForAdmin": "Waiting for admin to select an issue..."
+    "waitingForModerator": "Waiting for moderator to select a story..."
   },
   "username": {
     "label": "Username",

@@ -3,18 +3,19 @@ import { computedAsync } from "@vueuse/core";
 import type { GitHubIssue } from "../../types/github";
 
 const route = useRoute();
-const socketStore = useSocketStore();
+const roomStore = useRoomStore();
+const authStore = useAuthStore();
 
 watchEffect(() => {
-  if (!socketStore.username) return;
+  if (!authStore.username) return;
   const idParam = route.params.id;
   const id = Array.isArray(idParam) ? idParam[0] : idParam;
-  socketStore.joinLobby(id);
+  roomStore.joinRoom(id);
 });
 
 const isIssuesLoading = ref(false);
 
-const repository = computed(() => socketStore.lobby?.repository);
+const repository = computed(() => roomStore.room?.repository.name);
 
 /**
  * @see https://docs.github.com/en/rest/issues/issues?apiVersion=2022-11-28#list-repository-issues
@@ -46,14 +47,14 @@ const issues = computedAsync(
 </script>
 
 <template>
-  <LobbyTemplate
-    :lobby="socketStore.lobby"
-    :loading="socketStore.isJoiningLobby || !socketStore.username"
+  <RoomTemplate
+    :room="roomStore.room"
+    :loading="roomStore.isJoining || !authStore.username"
     :issues-loading="isIssuesLoading"
-    :current-user="socketStore.username"
+    :current-user="authStore.username"
     :issues="issues"
-    @select-issue="socketStore.selectIssue"
-    @estimate="socketStore.estimate"
-    @reveal-estimations="socketStore.revealEstimations"
+    @select-story="roomStore.selectStory"
+    @estimate="roomStore.estimate"
+    @end-estimation="roomStore.endEstimation"
   />
 </template>

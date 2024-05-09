@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-const socketStore = useSocketStore();
+const roomStore = useRoomStore();
 const router = useRouter();
 
-const handleCreateLobby = async (repository: string) => {
-  const lobby = await socketStore.createLobby(repository);
-  await router.push(`/lobbies/${lobby.id}`);
+const handleCreateRoom = async (repository: string) => {
+  const room = await roomStore.createRoom(repository);
+  await router.push(`/rooms/${room.id}`);
 };
 </script>
 
 <template>
-  <HomeTemplate :loading="socketStore.isJoiningLobby" @create-lobby="handleCreateLobby" />
+  <HomeTemplate :loading="roomStore.isJoining" @create-room="handleCreateRoom" />
 </template>

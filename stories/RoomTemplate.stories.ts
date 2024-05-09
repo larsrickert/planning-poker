@@ -1,29 +1,35 @@
 import { defineStorybookActionsAndVModels } from "@sit-onyx/storybook-utils";
 import type { StoryObj } from "@storybook/vue3";
-import LobbyTemplate from "~/components/LobbyTemplate.vue";
+import RoomTemplate from "~/components/RoomTemplate.vue";
 import { Default as GitHubIssuesTableDefault } from "./GitHubIssuesTable.stories";
 
 const meta = {
-  title: "pages/Lobby",
+  title: "pages/Room",
   ...defineStorybookActionsAndVModels({
-    component: LobbyTemplate,
-    events: ["selectIssue", "estimate", "revealEstimations"],
+    component: RoomTemplate,
+    events: ["selectStory", "estimate", "endEstimation"],
   }),
 };
 
 export default meta;
-type Story = StoryObj<typeof LobbyTemplate>;
+type Story = StoryObj<typeof RoomTemplate>;
 
 export const Default = {
   args: {
     currentUser: "larsrickert",
-    lobby: {
-      id: "lobby-1",
-      repository: "owner/repository",
+    room: {
+      id: "room-1",
+      repository: {
+        name: "owner/repository",
+        type: "github",
+      },
       users: Array.from({ length: 8 }, (_, index) => ({
-        name: index === 0 ? "larsrickert" : `User ${index + 1}`,
-        role: index === 0 ? "admin" : "user",
+        id: index.toString(),
+        username: index === 0 ? "larsrickert" : `User ${index + 1}`,
+        avatar: index === 0 ? "https://github.com/larsrickert.png" : undefined,
       })),
+      created: new Date().toISOString(),
+      moderator: "0",
     },
     issues: GitHubIssuesTableDefault.args.issues,
   },
@@ -48,13 +54,13 @@ export const Empty = { args: {} } satisfies Story;
 export const SelectedIssue = {
   args: {
     ...Default.args,
-    lobby: {
-      ...Default.args.lobby,
-      users: Default.args.lobby.users.map((i, index) => ({
+    room: {
+      ...Default.args.room,
+      users: Default.args.room.users.map((i, index) => ({
         ...i,
         estimation: index % 2 === 0 ? 42 : undefined,
       })),
-      selectedIssue: 4,
+      selectedStory: 4,
     },
   },
 } satisfies Story;
@@ -62,8 +68,8 @@ export const SelectedIssue = {
 export const RevealedEstimations = {
   args: {
     ...SelectedIssue.args,
-    lobby: {
-      ...SelectedIssue.args.lobby,
+    room: {
+      ...SelectedIssue.args.room,
       averageEstimation: 42,
     },
   },

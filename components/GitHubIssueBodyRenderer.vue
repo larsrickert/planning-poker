@@ -20,6 +20,7 @@ const props = defineProps<{
       {{ $t("issues.emptyBody") }}
     </OnyxEmpty>
 
+    <!-- eslint-disable-next-line vue/no-v-html -->
     <div class="issue__body" v-html="props.issue.body_html" />
   </div>
 </template>

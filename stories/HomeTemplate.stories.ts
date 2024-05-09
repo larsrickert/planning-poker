@@ -6,7 +6,7 @@ const meta = {
   title: "pages/Home",
   ...defineStorybookActionsAndVModels({
     component: HomeTemplate,
-    events: ["createLobby"],
+    events: ["createRoom"],
   }),
 };
 
