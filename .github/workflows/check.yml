@@ -32,23 +32,6 @@ jobs:
       - name: 🧪 Run unit tests
         run: pnpm test
 
-  # run Playwright tests in parallel job to speed up workflow speed
-  playwright:
-    name: Run Playwright tests
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          cache: pnpm
-
-      - name: 📦 Install dependencies
-        run: pnpm install
-
       # install system dependencies for Playwright
       # see: https://playwright.dev/docs/browsers#install-system-dependencies
       - name: 📦 Install Playwright system dependencies
