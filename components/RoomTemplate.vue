@@ -21,7 +21,7 @@ const props = withDefaults(
      */
     loading?: boolean;
     /**
-     * Whether the issues are currently loading.
+     * Whether the GitHub issues are currently loading.
      */
     issuesLoading?: boolean;
     /**
@@ -37,7 +37,7 @@ const props = withDefaults(
 const emit = defineEmits<{
   selectStory: [number: number];
   /**
-   * Emitted when the users selects an estimation for the current issue.
+   * Emitted when the users selects an estimation for the current story.
    */
   estimate: [value: number];
   endEstimation: [];

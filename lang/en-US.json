@@ -20,7 +20,7 @@
       "reveal": "Reveal votes ({n} of {count})",
       "average": "Average estimation"
     },
-    "waitingForModerator": "Waiting for moderator to select an issue..."
+    "waitingForModerator": "Waiting for moderator to select a story..."
   },
   "username": {
     "label": "Username",

@@ -83,7 +83,7 @@ export default defineNitroPlugin((nitroApp) => {
 
     socket.on("selectStory", (roomId, ...args) => {
       if (!ROOMS.has(roomId)) {
-        console.error(`Tried to select issue for non-existing room "${roomId}"`);
+        console.error(`Tried to select story for non-existing room "${roomId}"`);
         return;
       }
 
