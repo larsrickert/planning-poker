@@ -4,9 +4,10 @@ import type { GitHubIssue } from "../../types/github";
 
 const route = useRoute();
 const roomStore = useRoomStore();
+const authStore = useAuthStore();
 
 watchEffect(() => {
-  if (!roomStore.username) return;
+  if (!authStore.username) return;
   const idParam = route.params.id;
   const id = Array.isArray(idParam) ? idParam[0] : idParam;
   roomStore.joinRoom(id);
@@ -48,9 +49,9 @@ const issues = computedAsync(
 <template>
   <RoomTemplate
     :room="roomStore.room"
-    :loading="roomStore.isJoining || !roomStore.username"
+    :loading="roomStore.isJoining || !authStore.username"
     :issues-loading="isIssuesLoading"
-    :current-user="roomStore.username"
+    :current-user="authStore.username"
     :issues="issues"
     @select-story="roomStore.selectStory"
     @estimate="roomStore.estimate"

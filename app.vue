@@ -2,7 +2,8 @@
 import settings from "@sit-onyx/icons/settings.svg?raw";
 import { OnyxAppLayout, OnyxHeadline, OnyxIconButton, OnyxSwitch, OnyxTooltip } from "sit-onyx";
 
-const roomStore = useRoomStore();
+const authStore = useAuthStore();
+
 const isDialogOpen = ref(false);
 const colorMode = useColorMode();
 
@@ -37,8 +38,8 @@ const isDark = computed({
 
     <NuxtLayout>
       <UsernameDialog
-        v-if="!roomStore.username || isDialogOpen"
-        v-model="roomStore.username"
+        v-if="!authStore.username || isDialogOpen"
+        v-model="authStore.username"
         @update:model-value="isDialogOpen = false"
       />
       <NuxtPage />

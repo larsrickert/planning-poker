@@ -8,23 +8,12 @@ export const useRoomStore = defineStore("room", () => {
     autoConnect: false,
   });
 
+  const authStore = useAuthStore();
+
   /**
    * Current room state.
    */
   const room = ref<RoomDto>();
-
-  /**
-   * Current username.
-   */
-  const username = ref("");
-
-  // sync username with localStorage
-  onMounted(() => {
-    username.value = localStorage.getItem("username") ?? "";
-    watch(username, (newValue) => {
-      localStorage.setItem("username", newValue);
-    });
-  });
 
   socket.on("roomUpdate", (newRoom) => (room.value = newRoom));
 
@@ -46,12 +35,12 @@ export const useRoomStore = defineStore("room", () => {
       });
 
       if (socket.connected) {
-        socket.emit("createRoom", username.value, repository);
+        socket.emit("createRoom", authStore.username, repository);
       } else {
         socket.connect();
 
         socket.once("connect", () => {
-          socket.emit("createRoom", username.value, repository);
+          socket.emit("createRoom", authStore.username, repository);
         });
       }
     });
@@ -75,12 +64,12 @@ export const useRoomStore = defineStore("room", () => {
       });
 
       if (socket.connected) {
-        socket.emit("join", id, username.value);
+        socket.emit("join", id, authStore.username);
       } else {
         socket.connect();
 
         socket.once("connect", () => {
-          socket.emit("join", id, username.value);
+          socket.emit("join", id, authStore.username);
         });
       }
     });
@@ -112,7 +101,6 @@ export const useRoomStore = defineStore("room", () => {
     isJoining,
     room,
     joinRoom,
-    username,
     selectStory,
     estimate,
     endEstimation,
