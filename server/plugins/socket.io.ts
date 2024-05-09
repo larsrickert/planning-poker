@@ -150,6 +150,7 @@ export default defineNitroPlugin((nitroApp) => {
       const room = ROOMS.get(roomId)!;
       room.changeName(...args);
       emitUpdate(roomId);
+      console.info(`Renamed user "${args[0]}" to "${args[1]}" in room "${roomId}"`);
     });
   });
 
