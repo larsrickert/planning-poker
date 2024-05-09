@@ -82,10 +82,11 @@ const votedUsers = computed(() => props.room?.users.filter((i) => i.estimation).
     </p>
 
     <template v-if="selectedIssue">
-      <template v-if="props.room?.averageEstimation != undefined">
-        <OnyxHeadline is="h3" class="average"> {{ $t("room.estimation.average") }}: </OnyxHeadline>
-        <span class="average__value">{{ props.room.averageEstimation }}</span>
-      </template>
+      <AverageEstimation
+        v-if="props.room?.averageEstimation"
+        :estimation="props.room.averageEstimation"
+        :users="props.room.users"
+      />
 
       <template v-else>
         <OnyxHeadline is="h3">{{ $t("room.estimation.headline") }}</OnyxHeadline>
@@ -144,15 +145,6 @@ const votedUsers = computed(() => props.room?.users.filter((i) => i.estimation).
 
   &__reveal {
     margin-left: var(--onyx-spacing-2xl);
-  }
-}
-
-.average {
-  &__value {
-    font-size: 5rem;
-    line-height: 5rem;
-    font-weight: 600;
-    color: var(--onyx-color-text-icons-neutral-soft);
   }
 }
 </style>
