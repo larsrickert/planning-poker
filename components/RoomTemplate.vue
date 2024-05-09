@@ -52,6 +52,8 @@ const user = computed(() => {
 });
 
 const isModerator = computed(() => user.value?.id === props.room?.moderator);
+
+const votedUsers = computed(() => props.room?.users.filter((i) => i.estimation).length ?? 0);
 </script>
 
 <template>
@@ -93,7 +95,7 @@ const isModerator = computed(() => user.value?.id === props.room?.moderator);
             v-for="i in AVAILABLE_ESTIMATIONS"
             :key="i"
             :value="i"
-            :selected="user && props.room?.estimations[user.id] === i"
+            :selected="user?.estimation === i"
             @click="emit('estimate', i)"
           />
 
@@ -102,7 +104,7 @@ const isModerator = computed(() => user.value?.id === props.room?.moderator);
             class="estimations__reveal"
             :label="
               $t('room.estimation.reveal', {
-                n: Object.values(props.room?.estimations ?? {}).length,
+                n: votedUsers,
                 count: props.room?.users.length ?? 0,
               })
             "

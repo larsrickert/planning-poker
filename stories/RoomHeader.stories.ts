@@ -31,11 +31,7 @@ export const Estimated = {
     ...Default.args,
     room: {
       ...Default.args.room,
-      estimations: {
-        "1": 42,
-        "3": 12,
-        "5": 4,
-      },
+      users: Default.args.room.users.map((user) => ({ ...user, estimation: 42 })),
     },
   },
 } satisfies Story;
@@ -45,7 +41,7 @@ export const ShowEstimations = {
     ...Estimated.args,
     room: {
       ...Estimated.args.room,
-      averageEstimation: 19.3,
+      averageEstimation: 42,
     },
   },
 } satisfies Story;

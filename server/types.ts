@@ -24,12 +24,6 @@ export type RoomDto = {
    * ID of the moderator.
    */
   moderator: string;
-  /**
-   * Map of user estimations. Will only be available
-   * if the moderator has ended the estimation.
-   * key = user ID, value = estimation
-   */
-  estimations: Record<string, number>;
   selectedStory?: number;
   /**
    * Average estimation of all users.
@@ -79,6 +73,7 @@ export type User = {
   id: string;
   username: string;
   avatar?: string;
+  estimation?: number;
 };
 
 export type ServerToClientEvents = {

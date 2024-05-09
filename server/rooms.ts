@@ -7,12 +7,11 @@ import type { Room, User } from "./types";
  */
 export const createRoom = (moderatorName: string, repositoryName: string) => {
   const moderator = createUser(moderatorName);
-  const users = [moderator];
+  let users = [moderator];
 
   const room: Room = {
     id: crypto.randomUUID(),
     created: new Date().toISOString(),
-    estimations: {},
     moderator: moderator.id,
     repository: {
       name: repositoryName,
@@ -31,16 +30,21 @@ export const createRoom = (moderatorName: string, repositoryName: string) => {
     },
     selectStory: (story) => {
       room.selectedStory = story;
-      room.estimations = {};
+      users = users.map((user) => ({ ...user, estimation: undefined }));
       delete room.averageEstimation;
     },
     estimate: (userId, estimation) => {
-      room.estimations[userId] = estimation;
+      const index = users.findIndex((user) => user.id === userId);
+      if (index === -1) return;
+      users[index].estimation = estimation;
     },
     endEstimation: () => {
+      const estimations = users
+        .map((user) => user.estimation)
+        .filter((i): i is NonNullable<typeof i> => !!i);
+
       const average =
-        Object.values(room.estimations).reduce((sum, estimation) => sum + estimation, 0) /
-          Object.values(room.estimations).length || 1;
+        estimations.reduce((sum, estimation) => sum + estimation, 0) / estimations.length || 1;
 
       room.averageEstimation = Math.round(average * 10) / 10;
     },

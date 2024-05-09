@@ -29,7 +29,6 @@ export const Default = {
         avatar: index === 0 ? "https://github.com/larsrickert.png" : undefined,
       })),
       created: new Date().toISOString(),
-      estimations: {},
       moderator: "0",
     },
     issues: GitHubIssuesTableDefault.args.issues,
