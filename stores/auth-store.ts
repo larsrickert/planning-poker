@@ -9,5 +9,7 @@ export const useAuthStore = defineStore("auth", () => {
     initOnMounted: true,
   });
 
-  return { username };
+  const avatar = computed(() => `https://github.com/${username.value}.png`);
+
+  return { username, avatar };
 });

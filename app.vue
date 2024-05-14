@@ -1,8 +1,13 @@
 <script lang="ts" setup>
-import settings from "@sit-onyx/icons/settings.svg?raw";
-import { OnyxAppLayout, OnyxHeadline, OnyxIconButton, OnyxSwitch, OnyxTooltip } from "sit-onyx";
+import spade from "@/assets/images/spade.svg?raw";
+import moon from "@sit-onyx/icons/moon.svg?raw";
+import sunny from "@sit-onyx/icons/sunny.svg?raw";
+import userEdit from "@sit-onyx/icons/user-edit.svg?raw";
+import { OnyxAppLayout, OnyxIcon, OnyxNavBar, OnyxUserMenu, type ListboxOption } from "sit-onyx";
+import { version } from "./package.json";
 
 const authStore = useAuthStore();
+const { t } = useI18n();
 
 const isDialogOpen = ref(false);
 const colorMode = useColorMode();
@@ -11,29 +16,45 @@ const isDark = computed({
   get: () => colorMode.value === "dark",
   set: (value) => (colorMode.preference = value ? "dark" : "light"),
 });
+
+const userMenuOptions = computed(() => {
+  return [
+    { label: t("toggleDarkMode"), value: "dark-mode", icon: isDark.value ? moon : sunny },
+    { label: t("username.change"), value: "username", icon: userEdit },
+  ] satisfies ListboxOption[];
+});
+
+const handleOptionClick = (value: string) => {
+  if (value === "dark-mode") isDark.value = !isDark.value;
+  else if (value === "username") isDialogOpen.value = true;
+};
 </script>
 
 <template>
   <OnyxAppLayout class="onyx-grid-max-md">
     <template #navBar>
-      <header class="header">
-        <OnyxHeadline is="h1">{{ $t("appName") }}</OnyxHeadline>
+      <OnyxNavBar @app-area-click="$router.push('/')">
+        <template #appArea>
+          <OnyxIcon :icon="spade" />
+          {{ $t("appName") }}
+        </template>
 
-        <div class="header__actions">
+        <template #contextArea>
           <ClientOnly>
-            <OnyxSwitch v-model="isDark" :label="$t('darkMode')" />
-
-            <OnyxTooltip :text="$t('username.change')" position="bottom">
-              <OnyxIconButton
-                :label="$t('username.change')"
-                :icon="settings"
-                variation="secondary"
-                @click="isDialogOpen = true"
-              />
-            </OnyxTooltip>
+            <OnyxUserMenu
+              :username="authStore.username"
+              :options="userMenuOptions"
+              :avatar="authStore.avatar"
+              @option-click="handleOptionClick($event)"
+            >
+              <template #footer>
+                {{ $t("appVersion") }}
+                <span class="onyx-text--monospace">{{ version }}</span>
+              </template>
+            </OnyxUserMenu>
           </ClientOnly>
-        </div>
-      </header>
+        </template>
+      </OnyxNavBar>
     </template>
 
     <NuxtLayout>
@@ -46,25 +67,3 @@ const isDark = computed({
     </NuxtLayout>
   </OnyxAppLayout>
 </template>
-
-<style lang="scss" scoped>
-.header {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--onyx-spacing-xs);
-
-  padding: var(--onyx-spacing-md);
-  box-sizing: content-box;
-  max-width: var(--onyx-grid-max-width);
-  margin: 0 auto;
-
-  &__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--onyx-spacing-lg);
-    align-items: center;
-  }
-}
-</style>
