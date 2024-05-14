@@ -13,8 +13,7 @@ import { OnyxPageLayout } from "sit-onyx";
 <style lang="scss">
 .page {
   padding: var(--onyx-grid-margin);
-  box-sizing: content-box;
   max-width: var(--onyx-grid-max-width);
-  margin: 0 auto;
+  margin-inline: var(--onyx-grid-margin-inline);
 }
 </style>

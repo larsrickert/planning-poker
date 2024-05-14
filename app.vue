@@ -31,7 +31,7 @@ const handleOptionClick = (value: string) => {
 </script>
 
 <template>
-  <OnyxAppLayout class="onyx-grid-max-md">
+  <OnyxAppLayout class="onyx-grid-max-md onyx-grid-center">
     <template #navBar>
       <OnyxNavBar @app-area-click="$router.push('/')">
         <template #appArea>
