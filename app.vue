@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import githubLogo from "@/assets/images/github-logo.svg?raw";
 import spade from "@/assets/images/spade.svg?raw";
 import moon from "@sit-onyx/icons/moon.svg?raw";
 import sunny from "@sit-onyx/icons/sunny.svg?raw";
@@ -21,12 +22,16 @@ const userMenuOptions = computed(() => {
   return [
     { label: t("toggleDarkMode"), value: "dark-mode", icon: isDark.value ? moon : sunny },
     { label: t("username.change"), value: "username", icon: userEdit },
+    { label: t("github"), value: "github", icon: githubLogo },
   ] satisfies ListboxOption[];
 });
 
 const handleOptionClick = (value: string) => {
   if (value === "dark-mode") isDark.value = !isDark.value;
   else if (value === "username") isDialogOpen.value = true;
+  else if (value === "github") {
+    window.open("https://github.com/larsrickert/planning-poker", "_blank");
+  }
 };
 </script>
 

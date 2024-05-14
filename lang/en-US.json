@@ -2,6 +2,7 @@
   "appName": "GitHub planning poker",
   "appVersion": "App version",
   "toggleDarkMode": "Toggle dark mode",
+  "github": "See on GitHub",
   "room": {
     "create": {
       "description": "Please create a new room for your planning poker.",
