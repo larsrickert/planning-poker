@@ -111,6 +111,7 @@ const votedUsers = computed(() => props.room?.users.filter((i) => i.estimation).
             "
             color="neutral"
             mode="outline"
+            :disabled="votedUsers === 0"
             @click="emit('endEstimation')"
           />
         </div>

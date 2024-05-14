@@ -2,7 +2,7 @@
   "name": "template-nuxt",
   "private": true,
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "packageManager": "pnpm@9.1.0",
   "scripts": {
     "build": "nuxt build",

@@ -4,6 +4,7 @@ import {
   OnyxAvatarStack,
   OnyxBadge,
   OnyxEmpty,
+  OnyxInput,
   OnyxLink,
   OnyxSkeleton,
   OnyxTable,
@@ -22,6 +23,19 @@ const emit = defineEmits<{
 }>();
 
 const isOpen = ref(true);
+
+const searchValue = ref("");
+
+const filteredIssues = computed(() => {
+  const search = searchValue.value.toLowerCase();
+  if (!search.length) return props.issues;
+
+  return props.issues.filter((issue) => {
+    const isIssueNumber = !isNaN(+search.replace("#", ""));
+    if (isIssueNumber) return issue.number.toString().startsWith(search.replace("#", ""));
+    return issue.title.toLowerCase().includes(search);
+  });
+});
 </script>
 
 <template>
@@ -37,7 +51,18 @@ const isOpen = ref(true);
     <details v-else :open="isOpen" @toggle="isOpen = $event.target.open">
       <summary>{{ isOpen ? $t("issues.hide") : $t("issues.show") }}</summary>
 
-      <OnyxTable striped grid>
+      <OnyxInput
+        v-model="searchValue"
+        class="search"
+        :label="$t('issues.search.label')"
+        :placeholder="$t('issues.search.placeholder')"
+      />
+
+      <OnyxEmpty v-if="!filteredIssues.length">
+        {{ $t("issues.search.noResults") }}
+      </OnyxEmpty>
+
+      <OnyxTable v-else striped grid>
         <thead>
           <tr>
             <th>{{ $t("issues.id") }}</th>
@@ -49,7 +74,7 @@ const isOpen = ref(true);
 
         <tbody>
           <tr
-            v-for="issue in props.issues"
+            v-for="issue in filteredIssues"
             :key="issue.number"
             :class="{ selected: issue.number === props.selectedIssue }"
             @click="emit('select', issue.number)"
@@ -145,5 +170,10 @@ details {
   :deep(.onyx-tooltip-wrapper div[aria-describedby]) {
     display: flex;
   }
+}
+
+.search {
+  margin-bottom: var(--onyx-spacing-lg);
+  max-width: 20rem;
 }
 </style>

@@ -44,7 +44,7 @@ export const createRoom = (moderatorName: string, repositoryName: string) => {
         .filter((i): i is NonNullable<typeof i> => !!i);
 
       const average =
-        estimations.reduce((sum, estimation) => sum + estimation, 0) / estimations.length || 1;
+        estimations.reduce((sum, estimation) => sum + estimation, 0) / (estimations.length || 1);
 
       room.averageEstimation = Math.round(average * 10) / 10;
     },
