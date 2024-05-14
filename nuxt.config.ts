@@ -9,6 +9,12 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
   ],
   css: ["~/assets/css/main.scss"],
+  app: {
+    head: {
+      title: "Planning Poker",
+      link: [{ rel: "icon", href: "/favicon.svg" }],
+    },
+  },
   i18n: {
     lazy: true,
     langDir: "lang",
