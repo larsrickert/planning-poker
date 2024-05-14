@@ -109,7 +109,7 @@ const votedUsers = computed(() => props.room?.users.filter((i) => i.estimation).
                 count: props.room?.users.length ?? 0,
               })
             "
-            variation="secondary"
+            color="neutral"
             mode="outline"
             @click="emit('endEstimation')"
           />
