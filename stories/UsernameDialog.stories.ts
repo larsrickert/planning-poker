@@ -13,4 +13,8 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof UsernameDialog>;
 
-export const Default = { args: {} } satisfies Story;
+export const Default = {
+  args: {
+    open: true,
+  },
+} satisfies Story;
