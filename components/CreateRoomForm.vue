@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import plusSmall from "@sit-onyx/icons/plus-small.svg?raw";
-import { OnyxButton, OnyxInput } from "sit-onyx";
 
 const props = defineProps<{
   /**
@@ -21,9 +20,10 @@ const handleSubmit = () => {
 </script>
 
 <template>
-  <form class="form" @submit.prevent="handleSubmit">
+  <form class="form onyx-grid" @submit.prevent="handleSubmit">
     <OnyxInput
       v-model="repository"
+      class="onyx-grid-span-3"
       :label="$t('room.create.githubRepo.label')"
       :placeholder="$t('room.create.githubRepo.placeholder')"
       :pattern="/\S+\/\S+/"
@@ -33,6 +33,7 @@ const handleSubmit = () => {
     />
 
     <OnyxButton
+      class="onyx-grid-span-3"
       :label="$t('room.create.submitLabel')"
       type="submit"
       mode="outline"
@@ -44,13 +45,10 @@ const handleSubmit = () => {
 
 <style lang="scss" scoped>
 .form {
-  display: flex;
   align-items: flex-end;
-  flex-wrap: wrap;
-  gap: var(--onyx-spacing-xl);
 
-  .onyx-input {
-    width: 16rem;
+  &:has(input:user-invalid) {
+    align-items: center;
   }
 }
 </style>

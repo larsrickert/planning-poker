@@ -4,7 +4,7 @@ import spade from "@/assets/images/spade.svg?raw";
 import moon from "@sit-onyx/icons/moon.svg?raw";
 import sunny from "@sit-onyx/icons/sunny.svg?raw";
 import userEdit from "@sit-onyx/icons/user-edit.svg?raw";
-import { OnyxAppLayout, OnyxIcon, OnyxNavBar, OnyxUserMenu, type ListboxOption } from "sit-onyx";
+import type { SelectOption } from "sit-onyx";
 import { version } from "./package.json";
 
 const authStore = useAuthStore();
@@ -23,7 +23,7 @@ const userMenuOptions = computed(() => {
     { label: t("toggleDarkMode"), value: "dark-mode", icon: isDark.value ? moon : sunny },
     { label: t("username.change"), value: "username", icon: userEdit },
     { label: t("github"), value: "github", icon: githubLogo },
-  ] satisfies ListboxOption[];
+  ] satisfies SelectOption[];
 });
 
 const handleOptionClick = (value: string) => {
@@ -44,7 +44,7 @@ const handleOptionClick = (value: string) => {
           {{ $t("appName") }}
         </template>
 
-        <template #contextArea>
+        <template v-if="authStore.username" #contextArea>
           <ClientOnly>
             <OnyxUserMenu
               :username="authStore.username"
@@ -63,12 +63,13 @@ const handleOptionClick = (value: string) => {
     </template>
 
     <NuxtLayout>
-      <UsernameDialog
-        v-if="!authStore.username || isDialogOpen"
-        v-model="authStore.username"
-        @update:model-value="isDialogOpen = false"
-      />
       <NuxtPage />
     </NuxtLayout>
+
+    <UsernameDialog
+      v-model="authStore.username"
+      :open="!authStore.username || isDialogOpen"
+      @update:model-value="isDialogOpen = false"
+    />
   </OnyxAppLayout>
 </template>

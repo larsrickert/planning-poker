@@ -1,7 +1,9 @@
 <script lang="ts" setup>
-import { OnyxButton, OnyxInput } from "sit-onyx";
-
 const modelValue = defineModel<string>({ default: "" });
+
+const props = defineProps<{
+  open?: boolean;
+}>();
 
 const username = ref("");
 watchEffect(() => (username.value = modelValue.value));
@@ -12,7 +14,8 @@ const handleSubmit = () => {
 </script>
 
 <template>
-  <AppDialog open>
+  <OnyxDialog :label="$t('username.dialogHeadline')" modal alert :open="props.open">
+    <OnyxHeadline is="h2">{{ $t("username.dialogHeadline") }}</OnyxHeadline>
     <p class="description">{{ $t("username.description") }}</p>
 
     <form class="form" @submit.prevent="handleSubmit">
@@ -25,13 +28,13 @@ const handleSubmit = () => {
 
       <OnyxButton :label="$t('username.submitLabel')" type="submit" mode="outline" />
     </form>
-  </AppDialog>
+  </OnyxDialog>
 </template>
 
 <style lang="scss" scoped>
 .description {
   white-space: pre-line;
-  margin-top: 0;
+  margin-top: var(--onyx-spacing-sm);
   margin-bottom: var(--onyx-spacing-lg);
 }
 

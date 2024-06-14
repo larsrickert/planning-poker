@@ -7,8 +7,8 @@ export default defineNuxtConfig({
     "@nuxt/test-utils/module",
     "@nuxtjs/color-mode",
     "@pinia/nuxt",
+    "@sit-onyx/nuxt",
   ],
-  css: ["~/assets/css/main.scss"],
   app: {
     head: {
       title: "Planning Poker",

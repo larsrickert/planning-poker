@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { OnyxEmpty, OnyxHeadline, OnyxLink } from "sit-onyx";
 import type { GitHubIssue } from "~/types/github";
 
 const props = defineProps<{
