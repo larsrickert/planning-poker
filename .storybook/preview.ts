@@ -2,7 +2,6 @@ import { createPreview } from "@sit-onyx/storybook-utils";
 import type { Preview } from "@storybook/vue3";
 
 import "@sit-onyx/storybook-utils/style.css";
-import "../assets/css/main.scss";
 
 const preview: Preview = {
   // we need to destructure here because as of Storybook 7.6

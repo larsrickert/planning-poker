@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import confetti from "canvas-confetti";
-import { OnyxHeadline } from "sit-onyx";
 import type { User } from "~/server/types";
 
 const props = defineProps<{

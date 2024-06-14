@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { OnyxButton, OnyxEmpty, OnyxHeadline, OnyxLink } from "sit-onyx";
 import type { RoomDto } from "~/server/types";
 import type { GitHubIssue } from "~/types/github";
 import EstimationCard from "./EstimationCard.vue";
@@ -92,14 +91,16 @@ const votedUsers = computed(() => props.room?.users.filter((i) => i.estimation).
         <OnyxHeadline is="h3">{{ $t("room.estimation.headline") }}</OnyxHeadline>
 
         <div class="estimations">
-          <EstimationCard
-            v-for="i in AVAILABLE_ESTIMATIONS"
-            :key="i"
-            class="estimation"
-            :value="i"
-            :selected="user?.estimation === i"
-            @click="emit('estimate', i)"
-          />
+          <div class="estimations__cards">
+            <EstimationCard
+              v-for="i in AVAILABLE_ESTIMATIONS"
+              :key="i"
+              class="estimation"
+              :value="i"
+              :selected="user?.estimation === i"
+              @click="emit('estimate', i)"
+            />
+          </div>
 
           <OnyxButton
             v-if="isModerator"
@@ -138,14 +139,17 @@ const votedUsers = computed(() => props.room?.users.filter((i) => i.estimation).
 }
 
 .estimations {
+  margin-top: var(--onyx-spacing-xs);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--onyx-spacing-xs);
-  margin-top: var(--onyx-spacing-xs);
+  gap: var(--onyx-spacing-lg) var(--onyx-spacing-2xl);
 
-  .estimation:nth-last-child(2) {
-    margin-right: var(--onyx-spacing-2xl);
+  &__cards {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--onyx-spacing-xs);
   }
 }
 </style>

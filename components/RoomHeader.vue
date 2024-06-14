@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import check from "@sit-onyx/icons/check.svg?raw";
-import { OnyxAvatar, OnyxHeadline, OnyxIcon, OnyxSkeleton, OnyxTooltip } from "sit-onyx";
 import type { RoomDto } from "~/server/types";
 
 const props = defineProps<{

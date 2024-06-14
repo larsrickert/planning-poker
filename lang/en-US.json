@@ -27,6 +27,7 @@
   "username": {
     "label": "Username",
     "placeholder": "John Doe",
+    "dialogHeadline": "Set username",
     "description": "Please set a username in order to use this application.\nFor the best experience, we recommend to use your GitHub username.",
     "submitLabel": "Save",
     "change": "Change username"

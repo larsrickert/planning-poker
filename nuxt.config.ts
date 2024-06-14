@@ -1,5 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ssr: false,
   devtools: { enabled: true },
   modules: [
     "@nuxtjs/i18n",
@@ -7,8 +8,8 @@ export default defineNuxtConfig({
     "@nuxt/test-utils/module",
     "@nuxtjs/color-mode",
     "@pinia/nuxt",
+    "@sit-onyx/nuxt",
   ],
-  css: ["~/assets/css/main.scss"],
   app: {
     head: {
       title: "Planning Poker",

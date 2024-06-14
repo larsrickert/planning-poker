@@ -1,15 +1,4 @@
 <script lang="ts" setup>
-import {
-  OnyxAvatar,
-  OnyxAvatarStack,
-  OnyxBadge,
-  OnyxEmpty,
-  OnyxInput,
-  OnyxLink,
-  OnyxSkeleton,
-  OnyxTable,
-  OnyxTooltip,
-} from "sit-onyx";
 import type { GitHubIssue } from "~/types/github";
 
 const props = defineProps<{
@@ -62,7 +51,7 @@ const filteredIssues = computed(() => {
         {{ $t("issues.search.noResults") }}
       </OnyxEmpty>
 
-      <OnyxTable v-else striped grid>
+      <OnyxTable v-else class="table" striped with-vertical-borders>
         <thead>
           <tr>
             <th>{{ $t("issues.id") }}</th>
@@ -129,10 +118,8 @@ const filteredIssues = computed(() => {
   height: 12rem;
 }
 
-.onyx-table {
-  overflow: auto;
+.table {
   max-height: 24rem;
-  display: block;
   width: max-content;
   max-width: 100%;
 
