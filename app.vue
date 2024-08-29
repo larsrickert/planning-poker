@@ -1,38 +1,20 @@
 <script lang="ts" setup>
 import githubLogo from "@/assets/images/github-logo.svg?raw";
 import spade from "@/assets/images/spade.svg?raw";
-import moon from "@sit-onyx/icons/moon.svg?raw";
-import sunny from "@sit-onyx/icons/sunny.svg?raw";
 import userEdit from "@sit-onyx/icons/user-edit.svg?raw";
-import type { SelectOption } from "sit-onyx";
+import { createToastProvider, TOAST_PROVIDER_INJECTION_KEY, type ColorSchemeValue } from "sit-onyx";
 import { version } from "./package.json";
 
 const authStore = useAuthStore();
 const { t } = useI18n();
 
-const isDialogOpen = ref(false);
-const colorMode = useColorMode();
+const isUsernameDialogOpen = ref(false);
 
-const isDark = computed({
-  get: () => colorMode.value === "dark",
-  set: (value) => (colorMode.preference = value ? "dark" : "light"),
-});
-
-const userMenuOptions = computed(() => {
-  return [
-    { label: t("toggleDarkMode"), value: "dark-mode", icon: isDark.value ? moon : sunny },
-    { label: t("username.change"), value: "username", icon: userEdit },
-    { label: t("github"), value: "github", icon: githubLogo },
-  ] satisfies SelectOption[];
-});
-
-const handleOptionClick = (value: string) => {
-  if (value === "dark-mode") isDark.value = !isDark.value;
-  else if (value === "username") isDialogOpen.value = true;
-  else if (value === "github") {
-    window.open("https://github.com/larsrickert/planning-poker", "_blank");
-  }
+const openLink = (href: string) => {
+  window.open(href, "_blank");
 };
+
+provide(TOAST_PROVIDER_INJECTION_KEY, createToastProvider());
 </script>
 
 <template>
@@ -46,12 +28,19 @@ const handleOptionClick = (value: string) => {
 
         <template v-if="authStore.username" #contextArea>
           <ClientOnly>
-            <OnyxUserMenu
-              :username="authStore.username"
-              :options="userMenuOptions"
-              :avatar="authStore.avatar"
-              @option-click="handleOptionClick($event)"
-            >
+            <OnyxUserMenu :username="authStore.username" :avatar="authStore.avatar">
+              <OnyxColorSchemeMenuItem v-model="$colorMode.preference as ColorSchemeValue" />
+
+              <OnyxMenuItem @click="isUsernameDialogOpen = true">
+                <OnyxIcon :icon="userEdit" />
+                {{ t("username.change") }}
+              </OnyxMenuItem>
+
+              <OnyxMenuItem @click="openLink('https://github.com/larsrickert/planning-poker')">
+                <OnyxIcon :icon="githubLogo" />
+                {{ t("github") }}
+              </OnyxMenuItem>
+
               <template #footer>
                 {{ $t("appVersion") }}
                 <span class="onyx-text--monospace">{{ version }}</span>
@@ -68,8 +57,10 @@ const handleOptionClick = (value: string) => {
 
     <UsernameDialog
       v-model="authStore.username"
-      :open="!authStore.username || isDialogOpen"
-      @update:model-value="isDialogOpen = false"
+      :open="!authStore.username || isUsernameDialogOpen"
+      @update:model-value="isUsernameDialogOpen = false"
     />
+
+    <OnyxToast />
   </OnyxAppLayout>
 </template>

@@ -30,13 +30,17 @@ const props = defineProps<{
           position="bottom"
           class="avatar"
         >
-          <div v-if="user.estimation" class="avatar__overlay">
-            <span v-if="props.room?.averageEstimation">
-              {{ user.estimation }}
-            </span>
-            <OnyxIcon v-else :icon="check" />
-          </div>
-          <OnyxAvatar :src="user.avatar" :label="user.username" />
+          <template #default="{ trigger }">
+            <div v-bind="trigger">
+              <div v-if="user.estimation" class="avatar__overlay">
+                <span v-if="props.room?.averageEstimation">
+                  {{ user.estimation }}
+                </span>
+                <OnyxIcon v-else :icon="check" />
+              </div>
+              <OnyxAvatar :src="user.avatar" :label="user.username" />
+            </div>
+          </template>
         </OnyxTooltip>
       </ClientOnly>
     </div>

@@ -25,6 +25,10 @@ const filteredIssues = computed(() => {
     return issue.title.toLowerCase().includes(search);
   });
 });
+
+const handleDetailsToggle = (event: ToggleEvent) => {
+  isOpen.value = (event.target as HTMLDetailsElement).open;
+};
 </script>
 
 <template>
@@ -37,7 +41,7 @@ const filteredIssues = computed(() => {
       {{ $t("issues.empty") }}
     </OnyxEmpty>
 
-    <details v-else :open="isOpen" @toggle="isOpen = $event.target.open">
+    <details v-else :open="isOpen" @toggle="handleDetailsToggle">
       <summary>{{ isOpen ? $t("issues.hide") : $t("issues.show") }}</summary>
 
       <OnyxInput
@@ -52,56 +56,58 @@ const filteredIssues = computed(() => {
       </OnyxEmpty>
 
       <OnyxTable v-else class="table" striped with-vertical-borders>
-        <thead>
+        <template #head>
           <tr>
             <th>{{ $t("issues.id") }}</th>
             <th>{{ $t("issues.title") }}</th>
             <th>{{ $t("issues.assignees") }}</th>
             <th>{{ $t("issues.labels") }}</th>
           </tr>
-        </thead>
+        </template>
 
-        <tbody>
-          <tr
-            v-for="issue in filteredIssues"
-            :key="issue.number"
-            :class="{ selected: issue.number === props.selectedIssue }"
-            @click="emit('select', issue.number)"
-          >
-            <td>
-              <OnyxLink :href="issue.html_url" target="_blank"> #{{ issue.number }} </OnyxLink>
-            </td>
-            <td>{{ issue.title }}</td>
-            <td>
-              <OnyxAvatarStack v-if="issue.assignees.length">
-                <OnyxAvatar
-                  v-for="assignee in issue.assignees"
-                  :key="assignee.login"
-                  :label="assignee.login"
-                  :src="assignee.avatar_url"
-                  size="24px"
-                />
-              </OnyxAvatarStack>
-            </td>
-            <td>
-              <div class="labels">
-                <OnyxTooltip
-                  v-for="label of issue.labels"
-                  :key="label.name"
-                  :text="label.description"
-                  position="bottom"
-                >
-                  <OnyxBadge
-                    density="compact"
-                    :style="`--onyx-badge-background-color: #${label.color}`"
-                  >
-                    {{ label.name }}
-                  </OnyxBadge>
-                </OnyxTooltip>
-              </div>
-            </td>
-          </tr>
-        </tbody>
+        <tr
+          v-for="issue in filteredIssues"
+          :key="issue.number"
+          :class="{ selected: issue.number === props.selectedIssue }"
+          @click="emit('select', issue.number)"
+        >
+          <td>
+            <OnyxLink :href="issue.html_url" target="_blank"> #{{ issue.number }} </OnyxLink>
+          </td>
+          <td>{{ issue.title }}</td>
+          <td>
+            <OnyxAvatarStack v-if="issue.assignees.length">
+              <OnyxAvatar
+                v-for="assignee in issue.assignees"
+                :key="assignee.login"
+                :label="assignee.login"
+                :src="assignee.avatar_url"
+                size="24px"
+              />
+            </OnyxAvatarStack>
+          </td>
+          <td>
+            <div class="labels">
+              <OnyxTooltip
+                v-for="label of issue.labels"
+                :key="label.name"
+                :text="label.description"
+                position="bottom"
+              >
+                <template #default="{ trigger }">
+                  <div v-bind="trigger">
+                    <OnyxBadge
+                      density="compact"
+                      :style="`--onyx-badge-background-color: #${label.color}`"
+                    >
+                      {{ label.name }}
+                    </OnyxBadge>
+                  </div>
+                </template>
+              </OnyxTooltip>
+            </div>
+          </td>
+        </tr>
       </OnyxTable>
     </details>
   </div>

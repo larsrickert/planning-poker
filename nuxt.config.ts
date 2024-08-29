@@ -1,13 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+  compatibilityDate: "2024-04-03",
   modules: [
+    "@sit-onyx/nuxt",
     "@nuxtjs/i18n",
     "@nuxt/eslint",
     "@nuxt/test-utils/module",
     "@nuxtjs/color-mode",
     "@pinia/nuxt",
-    "@sit-onyx/nuxt",
   ],
   app: {
     head: {
@@ -15,11 +16,19 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", href: "/favicon.svg" }],
     },
   },
+  css: ["@fontsource-variable/source-code-pro", "@fontsource-variable/source-sans-3"],
   i18n: {
     lazy: true,
     langDir: "lang",
-    defaultLocale: "en",
-    locales: [{ code: "en", file: "en-US.json" }],
+    defaultLocale: "en-US",
+    locales: [{ code: "en-US", file: "en-US.json", name: "English" }],
+  },
+  onyx: {
+    i18n: {
+      registerLocales: {
+        "en-US": "en-US",
+      },
+    },
   },
   colorMode: {
     preference: "dark",
