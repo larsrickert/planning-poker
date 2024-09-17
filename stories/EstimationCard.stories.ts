@@ -1,13 +1,9 @@
-import { defineStorybookActionsAndVModels } from "@sit-onyx/storybook-utils";
 import type { Meta, StoryObj } from "@storybook/vue3";
 import EstimationCard from "~/components/EstimationCard.vue";
 
 const meta: Meta<typeof EstimationCard> = {
   title: "components/EstimationCard",
-  ...defineStorybookActionsAndVModels({
-    component: EstimationCard,
-    events: ["click"],
-  }),
+  component: EstimationCard,
 };
 
 export default meta;

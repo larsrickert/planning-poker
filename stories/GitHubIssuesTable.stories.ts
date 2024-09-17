@@ -1,13 +1,9 @@
-import { defineStorybookActionsAndVModels } from "@sit-onyx/storybook-utils";
 import type { StoryObj } from "@storybook/vue3";
 import GitHubIssuesTable from "~/components/GitHubIssuesTable.vue";
 
 const meta = {
   title: "components/GitHubIssuesTable",
-  ...defineStorybookActionsAndVModels({
-    component: GitHubIssuesTable,
-    events: ["select"],
-  }),
+  component: GitHubIssuesTable,
 };
 
 export default meta;

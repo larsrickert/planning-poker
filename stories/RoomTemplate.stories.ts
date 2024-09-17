@@ -1,14 +1,10 @@
-import { defineStorybookActionsAndVModels } from "@sit-onyx/storybook-utils";
 import type { StoryObj } from "@storybook/vue3";
 import RoomTemplate from "~/components/RoomTemplate.vue";
 import { Default as GitHubIssuesTableDefault } from "./GitHubIssuesTable.stories";
 
 const meta = {
   title: "pages/Room",
-  ...defineStorybookActionsAndVModels({
-    component: RoomTemplate,
-    events: ["selectStory", "estimate", "endEstimation"],
-  }),
+  component: RoomTemplate,
 };
 
 export default meta;

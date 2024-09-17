@@ -1,13 +1,9 @@
-import { defineStorybookActionsAndVModels } from "@sit-onyx/storybook-utils";
 import type { StoryObj } from "@storybook/vue3";
 import HomeTemplate from "~/components/HomeTemplate.vue";
 
 const meta = {
   title: "pages/Home",
-  ...defineStorybookActionsAndVModels({
-    component: HomeTemplate,
-    events: ["createRoom"],
-  }),
+  component: HomeTemplate,
 };
 
 export default meta;

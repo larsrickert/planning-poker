@@ -5,7 +5,9 @@ const config: StorybookConfig = {
   addons: ["@storybook/addon-essentials", "storybook-dark-mode"],
   framework: {
     name: "@storybook-vue/nuxt",
-    options: {},
+    options: {
+      docgen: "vue-component-meta",
+    },
   },
   core: {
     disableTelemetry: true,

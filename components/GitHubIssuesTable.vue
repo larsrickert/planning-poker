@@ -25,6 +25,10 @@ const filteredIssues = computed(() => {
     return issue.title.toLowerCase().includes(search);
   });
 });
+
+const handleDetailsToggle = (event: ToggleEvent) => {
+  isOpen.value = (event.target as HTMLDetailsElement).open;
+};
 </script>
 
 <template>
@@ -37,7 +41,7 @@ const filteredIssues = computed(() => {
       {{ $t("issues.empty") }}
     </OnyxEmpty>
 
-    <details v-else :open="isOpen" @toggle="isOpen = $event.target.open">
+    <details v-else :open="isOpen" @toggle="handleDetailsToggle">
       <summary>{{ isOpen ? $t("issues.hide") : $t("issues.show") }}</summary>
 
       <OnyxInput
@@ -91,12 +95,16 @@ const filteredIssues = computed(() => {
                   :text="label.description"
                   position="bottom"
                 >
-                  <OnyxBadge
-                    density="compact"
-                    :style="`--onyx-badge-background-color: #${label.color}`"
-                  >
-                    {{ label.name }}
-                  </OnyxBadge>
+                  <template #default="{ trigger }">
+                    <div v-bind="trigger">
+                      <OnyxBadge
+                        density="compact"
+                        :style="`--onyx-badge-background-color: #${label.color}`"
+                      >
+                        {{ label.name }}
+                      </OnyxBadge>
+                    </div>
+                  </template>
                 </OnyxTooltip>
               </div>
             </td>
