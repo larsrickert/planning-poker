@@ -1,13 +1,9 @@
-import { defineStorybookActionsAndVModels } from "@sit-onyx/storybook-utils";
 import type { StoryObj } from "@storybook/vue3";
 import UsernameDialog from "~/components/UsernameDialog.vue";
 
 const meta = {
   title: "components/UsernameDialog",
-  ...defineStorybookActionsAndVModels({
-    component: UsernameDialog,
-    events: ["update:modelValue"],
-  }),
+  component: UsernameDialog,
 };
 
 export default meta;

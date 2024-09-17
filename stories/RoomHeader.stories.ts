@@ -1,14 +1,10 @@
-import { defineStorybookActionsAndVModels } from "@sit-onyx/storybook-utils";
 import type { Meta, StoryObj } from "@storybook/vue3";
 import RoomHeader from "~/components/RoomHeader.vue";
 import { Default as RoomTemplateDefault } from "./RoomTemplate.stories";
 
 const meta: Meta<typeof RoomHeader> = {
   title: "components/RoomHeader",
-  ...defineStorybookActionsAndVModels({
-    component: RoomHeader,
-    events: [],
-  }),
+  component: RoomHeader,
 };
 
 export default meta;

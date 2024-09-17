@@ -1,13 +1,9 @@
-import { defineStorybookActionsAndVModels } from "@sit-onyx/storybook-utils";
 import type { StoryObj } from "@storybook/vue3";
 import GitHubIssueBodyRenderer from "~/components/GitHubIssueBodyRenderer.vue";
 
 const meta = {
   title: "components/GitHubIssueBodyRenderer",
-  ...defineStorybookActionsAndVModels({
-    component: GitHubIssueBodyRenderer,
-    events: [],
-  }),
+  component: GitHubIssueBodyRenderer,
 };
 
 export default meta;

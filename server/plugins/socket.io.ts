@@ -20,7 +20,7 @@ export default defineNitroPlugin((nitroApp) => {
       userId?: string;
     }
   >();
-  io.bind(engine);
+  io.bind(engine as unknown as Parameters<typeof io.bind>[0]);
 
   /**
    * Map that holds all current rooms.
@@ -158,7 +158,10 @@ export default defineNitroPlugin((nitroApp) => {
     "/socket.io/",
     defineEventHandler({
       handler(event) {
-        engine.handleRequest(event.node.req, event.node.res);
+        engine.handleRequest(
+          event.node.req as Parameters<typeof engine.handleRequest>[0],
+          event.node.res,
+        );
         event._handled = true;
       },
       websocket: {
