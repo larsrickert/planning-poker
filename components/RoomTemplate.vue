@@ -3,9 +3,9 @@ import type { RoomDto } from "~/server/types";
 import type { GitHubIssue } from "~/types/github";
 import EstimationCard from "./EstimationCard.vue";
 
-export type EstimationMethod = keyof typeof AVAILABLE_ESTIMATIONS;
+export type EstimationMethod = keyof typeof ESTIMATION_METHODS;
 
-const AVAILABLE_ESTIMATIONS = {
+const ESTIMATION_METHODS = {
   "Story Points": [1, 2, 3, 5, 8, 13],
   Hours: [4, 8, 12, 24, 48, 72],
   Days: [0.5, 1, 2, 3, 5, 10],
@@ -63,7 +63,7 @@ const isModerator = computed(() => user.value?.id === props.room?.moderator);
 const votedUsers = computed(() => props.room?.users.filter((i) => i.estimation).length ?? 0);
 
 const methodOptions = computed(() =>
-  Object.keys(AVAILABLE_ESTIMATIONS).map((key) => ({
+  Object.keys(ESTIMATION_METHODS).map((key) => ({
     label: key,
     value: key as EstimationMethod,
   })),
@@ -71,7 +71,7 @@ const methodOptions = computed(() =>
 
 const estimationMethod = computed(() => props.room?.selectedMethod ?? "Story Points");
 
-const availableEstimations = computed(() => AVAILABLE_ESTIMATIONS[estimationMethod.value]);
+const availableEstimations = computed(() => ESTIMATION_METHODS[estimationMethod.value]);
 </script>
 
 <template>
