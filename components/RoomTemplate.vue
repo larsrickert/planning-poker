@@ -36,7 +36,6 @@ const props = withDefaults(
   }>(),
   {
     issues: () => [],
-    estimationMethod: () => "Fibonacci",
   },
 );
 
