@@ -55,6 +55,7 @@ const issues = computedAsync(
     :issues="issues"
     @select-story="roomStore.selectStory"
     @estimate="roomStore.estimate"
+    @select-method="roomStore.selectMethod"
     @end-estimation="roomStore.endEstimation"
   />
 </template>

@@ -101,6 +101,26 @@ export default defineNitroPlugin((nitroApp) => {
       console.info(`Selected story "${args[0]}" for room "${room.id}"`);
     });
 
+    socket.on("selectMethod", (roomId, ...args) => {
+      if (!ROOMS.has(roomId)) {
+        console.error(`Tried to select method for non-existing room "${roomId}"`);
+        return;
+      }
+
+      const room = ROOMS.get(roomId)!;
+
+      if (socket.data.userId !== room.moderator) {
+        console.error(
+          `User "${socket.data.userId}" tried to select story for room "${roomId}" but he is not the moderator`,
+        );
+        return;
+      }
+
+      room.selectMethod(...args);
+      emitUpdate(roomId);
+      console.info(`Selected method "${args[0]}" for room "${room.id}"`);
+    });
+
     socket.on("estimate", (roomId, estimation) => {
       if (!ROOMS.has(roomId)) {
         console.error(`Tried to estimate for non-existing room "${roomId}"`);

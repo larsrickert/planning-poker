@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import type { Socket } from "socket.io-client";
 import { io } from "socket.io-client";
 import type { ClientToServerEvents, RoomDto, ServerToClientEvents } from "~/server/types";
+import type { EstimationMethod } from "../components/RoomTemplate.vue";
 
 export const useRoomStore = defineStore("room", () => {
   const socket: Socket<ServerToClientEvents, ClientToServerEvents> = io({
@@ -91,6 +92,14 @@ export const useRoomStore = defineStore("room", () => {
     socket.emit("estimate", room.value.id, estimation);
   };
 
+  /**
+   * Selects a estimation method.
+   */
+  const selectMethod = (method: EstimationMethod) => {
+    if (!room.value) return;
+    socket.emit("selectMethod", room.value.id, method);
+  };
+
   const endEstimation = () => {
     if (!room.value) return;
     socket.emit("endEstimation", room.value.id);
@@ -110,6 +119,7 @@ export const useRoomStore = defineStore("room", () => {
     room,
     joinRoom,
     selectStory,
+    selectMethod,
     estimate,
     endEstimation,
   };

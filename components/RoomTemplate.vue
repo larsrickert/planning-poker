@@ -3,7 +3,13 @@ import type { RoomDto } from "~/server/types";
 import type { GitHubIssue } from "~/types/github";
 import EstimationCard from "./EstimationCard.vue";
 
-const AVAILABLE_ESTIMATIONS = [1, 2, 3, 5, 8, 13] as const;
+export type EstimationMethod = keyof typeof ESTIMATION_METHODS;
+
+const ESTIMATION_METHODS = {
+  "Story Points": [1, 2, 3, 5, 8, 13],
+  Hours: [4, 8, 12, 24, 48, 72],
+  Days: [0.5, 1, 2, 3, 5, 10],
+} as const;
 
 const props = withDefaults(
   defineProps<{
@@ -39,6 +45,7 @@ const emit = defineEmits<{
    * Emitted when the users selects an estimation for the current story.
    */
   estimate: [value: number];
+  selectMethod: [name: EstimationMethod];
   endEstimation: [];
 }>();
 
@@ -53,6 +60,17 @@ const user = computed(() => {
 const isModerator = computed(() => user.value?.id === props.room?.moderator);
 
 const votedUsers = computed(() => props.room?.users.filter((i) => i.estimation).length ?? 0);
+
+const methodOptions = computed(() =>
+  Object.keys(ESTIMATION_METHODS).map((key) => ({
+    label: key,
+    value: key as EstimationMethod,
+  })),
+);
+
+const estimationMethod = computed(() => props.room?.selectedMethod ?? "Story Points");
+
+const availableEstimations = computed(() => ESTIMATION_METHODS[estimationMethod.value]);
 </script>
 
 <template>
@@ -88,12 +106,22 @@ const votedUsers = computed(() => props.room?.users.filter((i) => i.estimation).
       />
 
       <template v-else>
-        <OnyxHeadline is="h3">{{ $t("room.estimation.headline") }}</OnyxHeadline>
+        <OnyxHeadline is="h3">{{
+          $t("room.estimation.headline", { method: estimationMethod })
+        }}</OnyxHeadline>
 
         <div class="estimations">
+          <OnyxSelect
+            v-if="isModerator"
+            :options="methodOptions"
+            :model-value="estimationMethod"
+            :label="$t('room.estimation.method-select')"
+            :list-label="$t('room.estimation.methods')"
+            @update:model-value="emit('selectMethod', $event as EstimationMethod)"
+          />
           <div class="estimations__cards">
             <EstimationCard
-              v-for="i in AVAILABLE_ESTIMATIONS"
+              v-for="i in availableEstimations"
               :key="i"
               class="estimation"
               :value="i"
