@@ -18,9 +18,11 @@
     },
     "headline": "Planning poker for",
     "estimation": {
-      "headline": "Select an estimation",
+      "headline": "Select an estimation using {method}:",
       "reveal": "Reveal votes ({n} of {count})",
-      "average": "Average estimation"
+      "average": "Average estimation",
+      "method-select": "Choose estimation method",
+      "methods": "List of estimation methods"
     },
     "waitingForModerator": "Waiting for moderator to select a story..."
   },

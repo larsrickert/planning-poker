@@ -1,3 +1,4 @@
+import type { EstimationMethod } from "../components/RoomTemplate.vue";
 import type { createRoom } from "./rooms";
 
 /**
@@ -25,6 +26,7 @@ export type RoomDto = {
    */
   moderator: string;
   selectedStory?: number;
+  selectedMethod?: EstimationMethod;
   /**
    * Average estimation of all users.
    * Will only be available after the estimation is ended.
@@ -42,6 +44,10 @@ export type RoomEvents = {
    * Selects the given story.
    */
   selectStory: (story: number) => void;
+  /**
+   * Selects the given estimation method.
+   */
+  selectMethod: (method: EstimationMethod) => void;
   /**
    * Selects the given estimation for the given user.
    */

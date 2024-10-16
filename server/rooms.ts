@@ -33,6 +33,11 @@ export const createRoom = (moderatorName: string, repositoryName: string) => {
       users = users.map((user) => ({ ...user, estimation: undefined }));
       delete room.averageEstimation;
     },
+    selectMethod: (method) => {
+      room.selectedMethod = method;
+      users = users.map((user) => ({ ...user, estimation: undefined }));
+      delete room.averageEstimation;
+    },
     estimate: (userId, estimation) => {
       const index = users.findIndex((user) => user.id === userId);
       if (index === -1) return;
