@@ -23,7 +23,7 @@ const handleSubmit = () => {
   <form class="form onyx-grid" @submit.prevent="handleSubmit">
     <OnyxInput
       v-model="repository"
-      class="onyx-grid-span-3"
+      class="onyx-grid-span-4"
       :label="$t('room.create.githubRepo.label')"
       :placeholder="$t('room.create.githubRepo.placeholder')"
       :pattern="/\S+\/\S+/"
@@ -33,7 +33,7 @@ const handleSubmit = () => {
     />
 
     <OnyxButton
-      class="onyx-grid-span-3"
+      class="onyx-grid-span-4"
       :label="$t('room.create.submitLabel')"
       type="submit"
       mode="outline"

@@ -38,7 +38,7 @@ const props = defineProps<{
                 </span>
                 <OnyxIcon v-else :icon="check" />
               </div>
-              <OnyxAvatar :src="user.avatar" :label="user.username" />
+              <OnyxAvatar :src="user.avatar" :full-name="user.username" />
             </div>
           </template>
         </OnyxTooltip>
