@@ -1,5 +1,6 @@
 import { Server as Engine } from "engine.io";
 import { defineEventHandler } from "h3";
+import type { DefaultEventsMap } from "socket.io";
 import { Server } from "socket.io";
 import { createRoom } from "../rooms";
 import type { ClientToServerEvents, Room, ServerToClientEvents } from "../types";
@@ -14,11 +15,8 @@ export default defineNitroPlugin((nitroApp) => {
   const io = new Server<
     ClientToServerEvents,
     ServerToClientEvents,
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    {},
-    {
-      userId?: string;
-    }
+    DefaultEventsMap,
+    { userId?: string }
   >();
   io.bind(engine as unknown as Parameters<typeof io.bind>[0]);
 
@@ -186,17 +184,10 @@ export default defineNitroPlugin((nitroApp) => {
       },
       websocket: {
         open(peer) {
-          const nodeContext = peer.ctx.node;
-          const req = nodeContext.req;
-
-          // @ts-expect-error private method
-          engine.prepare(req);
-
-          const rawSocket = nodeContext.req.socket;
-          const websocket = nodeContext.ws;
-
-          // @ts-expect-error private method
-          engine.onWebSocket(req, rawSocket, websocket);
+          // @ts-expect-error private method and property
+          engine.prepare(peer._internal.nodeReq);
+          // @ts-expect-error private method and property
+          engine.onWebSocket(peer._internal.nodeReq, peer._internal.nodeReq.socket, peer.websocket);
         },
       },
     }),

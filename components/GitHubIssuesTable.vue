@@ -81,7 +81,7 @@ const handleDetailsToggle = (event: ToggleEvent) => {
                 <OnyxAvatar
                   v-for="assignee in issue.assignees"
                   :key="assignee.login"
-                  :label="assignee.login"
+                  :full-name="assignee.login"
                   :src="assignee.avatar_url"
                   size="24px"
                 />

@@ -16,7 +16,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <OnyxNavBar @navigate-to-start="$router.push('/')">
+  <OnyxNavBar>
     <template #appArea>
       <OnyxIcon :icon="spade" />
       {{ $t("appName") }}
@@ -24,7 +24,7 @@ const emit = defineEmits<{
 
     <template v-if="props.username" #contextArea>
       <ClientOnly>
-        <OnyxUserMenu :username="props.username" :avatar="props.avatar">
+        <OnyxUserMenu :full-name="props.username" :avatar="props.avatar">
           <OnyxColorSchemeMenuItem v-model="$colorMode.preference as ColorSchemeValue" />
 
           <OnyxMenuItem @click="emit('changeUsername')">
