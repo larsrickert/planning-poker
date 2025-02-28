@@ -11,8 +11,6 @@ const emit = defineEmits<{
   select: [number: number];
 }>();
 
-const isOpen = ref(true);
-
 const searchValue = ref("");
 
 const filteredIssues = computed(() => {
@@ -25,47 +23,45 @@ const filteredIssues = computed(() => {
     return issue.title.toLowerCase().includes(search);
   });
 });
-
-const handleDetailsToggle = (event: ToggleEvent) => {
-  isOpen.value = (event.target as HTMLDetailsElement).open;
-};
 </script>
 
 <template>
   <div>
     <p class="description">{{ $t("issues.description") }}</p>
 
-    <OnyxSkeleton v-if="props.skeleton" class="table-skeleton" />
-
-    <OnyxEmpty v-else-if="!props.issues.length">
-      {{ $t("issues.empty") }}
-    </OnyxEmpty>
-
-    <details v-else :open="isOpen" @toggle="handleDetailsToggle">
-      <summary>{{ isOpen ? $t("issues.hide") : $t("issues.show") }}</summary>
-
+    <div class="onyx-grid">
       <OnyxInput
         v-model="searchValue"
-        class="search"
+        class="onyx-grid-span-4"
         :label="$t('issues.search.label')"
         :placeholder="$t('issues.search.placeholder')"
+        :skeleton="props.skeleton"
       />
 
-      <OnyxEmpty v-if="!filteredIssues.length">
-        {{ $t("issues.search.noResults") }}
-      </OnyxEmpty>
+      <OnyxTable class="table onyx-grid-span-full" striped with-vertical-borders>
+        <template #headline>
+          <OnyxHeadline is="h2">
+            {{ $t("issues.issues") }}
+            <span class="table__count"> ({{ props.issues.length }})</span>
+          </OnyxHeadline>
+        </template>
 
-      <OnyxTable v-else class="table" striped with-vertical-borders>
-        <thead>
-          <tr>
-            <th>{{ $t("issues.id") }}</th>
-            <th>{{ $t("issues.title") }}</th>
-            <th>{{ $t("issues.assignees") }}</th>
-            <th>{{ $t("issues.labels") }}</th>
+        <template #head>
+          <th>{{ $t("issues.id") }}</th>
+          <th>{{ $t("issues.title") }}</th>
+          <th>{{ $t("issues.assignees") }}</th>
+          <th>{{ $t("issues.labels") }}</th>
+        </template>
+
+        <template v-if="props.skeleton">
+          <tr v-for="skeletonRow in 4" :key="skeletonRow">
+            <td v-for="skeletonColumn in 4" :key="skeletonColumn">
+              <OnyxSkeleton class="table__skeleton" />
+            </td>
           </tr>
-        </thead>
+        </template>
 
-        <tbody>
+        <template v-else>
           <tr
             v-for="issue in filteredIssues"
             :key="issue.number"
@@ -109,9 +105,9 @@ const handleDetailsToggle = (event: ToggleEvent) => {
               </div>
             </td>
           </tr>
-        </tbody>
+        </template>
       </OnyxTable>
-    </details>
+    </div>
   </div>
 </template>
 
@@ -120,16 +116,8 @@ const handleDetailsToggle = (event: ToggleEvent) => {
   margin-bottom: var(--onyx-spacing-md);
 }
 
-.table-skeleton {
-  width: 24rem;
-  max-width: 100%;
-  height: 12rem;
-}
-
 .table {
-  max-height: 24rem;
-  width: max-content;
-  max-width: 100%;
+  max-height: 32rem;
 
   tbody tr {
     cursor: pointer;
@@ -144,14 +132,14 @@ const handleDetailsToggle = (event: ToggleEvent) => {
       background-color: var(--onyx-color-base-primary-100);
     }
   }
-}
 
-details {
-  width: max-content;
-  max-width: 100%;
+  &__skeleton {
+    height: 1lh;
+    width: 100%;
+  }
 
-  summary {
-    margin-bottom: var(--onyx-spacing-2xs);
+  &__count {
+    color: var(--onyx-color-text-icons-neutral-soft);
   }
 }
 
@@ -165,10 +153,5 @@ details {
   :deep(.onyx-tooltip-wrapper div[aria-describedby]) {
     display: flex;
   }
-}
-
-.search {
-  margin-bottom: var(--onyx-spacing-lg);
-  max-width: 20rem;
 }
 </style>

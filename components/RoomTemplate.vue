@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import hourglass from "@sit-onyx/icons/hourglass.svg?raw";
 import type { RoomDto } from "~/server/types";
 import type { GitHubIssue } from "~/types/github";
 import EstimationCard from "./EstimationCard.vue";
@@ -94,9 +95,13 @@ const availableEstimations = computed(() => ESTIMATION_METHODS[estimationMethod.
       @select="emit('selectStory', $event)"
     />
 
-    <p v-else-if="!selectedIssue">
+    <OnyxEmpty v-else-if="!selectedIssue">
+      <template #icon>
+        <OnyxIcon :icon="hourglass" size="48px" />
+      </template>
+
       {{ $t("room.waitingForModerator") }}
-    </p>
+    </OnyxEmpty>
 
     <template v-if="selectedIssue">
       <AverageEstimation
@@ -106,9 +111,9 @@ const availableEstimations = computed(() => ESTIMATION_METHODS[estimationMethod.
       />
 
       <template v-else>
-        <OnyxHeadline is="h3">{{
-          $t("room.estimation.headline", { method: estimationMethod })
-        }}</OnyxHeadline>
+        <OnyxHeadline is="h3">
+          {{ $t("room.estimation.headline", { method: estimationMethod }) }}
+        </OnyxHeadline>
 
         <div class="estimations">
           <OnyxSelect

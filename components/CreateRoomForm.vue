@@ -20,7 +20,7 @@ const handleSubmit = () => {
 </script>
 
 <template>
-  <form class="form onyx-grid" @submit.prevent="handleSubmit">
+  <OnyxForm class="form onyx-grid" @submit.prevent="handleSubmit">
     <OnyxInput
       v-model="repository"
       class="onyx-grid-span-4"
@@ -36,11 +36,10 @@ const handleSubmit = () => {
       class="onyx-grid-span-4"
       :label="$t('room.create.submitLabel')"
       type="submit"
-      mode="outline"
       :icon="plusSmall"
       :loading="props.loading"
     />
-  </form>
+  </OnyxForm>
 </template>
 
 <style lang="scss" scoped>

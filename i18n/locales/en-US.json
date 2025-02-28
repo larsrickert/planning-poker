@@ -40,14 +40,11 @@
     "title": "Title",
     "labels": "Labels",
     "description": "Select a GitHub issue below to start the planning.",
-    "empty": "No issues found",
-    "show": "Show issues",
-    "hide": "Hide issues",
     "emptyBody": "Issue has no description",
     "search": {
       "label": "Search",
-      "placeholder": "Search number or title...",
-      "noResults": "No results for your search. Try to change the search value."
-    }
+      "placeholder": "Search number or title..."
+    },
+    "issues": "Issues"
   }
 }

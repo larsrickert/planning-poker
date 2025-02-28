@@ -10,7 +10,7 @@ const props = defineProps<{
 
 <template>
   <div class="header">
-    <OnyxHeadline is="h2">
+    <OnyxHeadline is="h1">
       {{ $t("room.headline") }}:
 
       <OnyxSkeleton v-if="props.skeleton" class="header__repository--skeleton" />
