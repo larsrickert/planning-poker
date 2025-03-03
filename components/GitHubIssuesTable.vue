@@ -115,7 +115,7 @@ const filters = defineModel<IssueFilters>("filters", { default: () => ({}) });
 .table {
   max-height: 32rem;
 
-  tbody tr:not(:has(.table__load-more)) {
+  tbody tr {
     cursor: pointer;
   }
 
