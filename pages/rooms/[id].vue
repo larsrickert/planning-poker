@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { computedAsync } from "@vueuse/core";
+import { useAsyncState, watchDebounced } from "@vueuse/core";
+import type { IssueFilters } from "~/components/GitHubIssuesTable.vue";
 import type { GitHubIssue } from "../../types/github";
 
 const route = useRoute();
@@ -13,20 +14,32 @@ watchEffect(() => {
   roomStore.joinRoom(id);
 });
 
-const isIssuesLoading = ref(false);
-
+const filters = ref<IssueFilters>({});
 const repository = computed(() => roomStore.room?.repository.name);
 
 /**
  * @see https://docs.github.com/en/rest/issues/issues?apiVersion=2022-11-28#list-repository-issues
  */
-const issues = computedAsync(
+const {
+  isLoading,
+  state: issues,
+  execute: refreshIssues,
+} = useAsyncState(
   async () => {
     if (!repository.value) return [];
 
-    // TODO: implement pagination
+    const searchParts = ["is:issue", "state:open", `repo:${repository.value}`];
+    if (filters.value.search) {
+      const number = +filters.value.search.replaceAll("#", "");
+      if (!isNaN(number)) {
+        searchParts.push(filters.value.search);
+      } else {
+        searchParts.push(`in:title ${filters.value.search}`);
+      }
+    }
+
     const response = await fetch(
-      `https://api.github.com/search/issues?per_page=100&q=${encodeURIComponent(`is:issue state:open repo:${repository.value}`)}`,
+      `https://api.github.com/search/issues?per_page=100&page=${1}&q=${encodeURIComponent(searchParts.join(" "))}`,
       {
         headers: {
           "X-GitHub-Api-Version": "2022-11-28",
@@ -36,21 +49,27 @@ const issues = computedAsync(
     );
 
     if (!response.ok) return [];
+
     const data = await response.json();
     return data.items as GitHubIssue[];
   },
   [],
   {
-    evaluating: isIssuesLoading,
+    immediate: false,
+    resetOnExecute: false,
   },
 );
+
+watch(repository, () => refreshIssues(), { immediate: true });
+watchDebounced(filters, () => refreshIssues(), { debounce: 500, deep: true });
 </script>
 
 <template>
   <RoomTemplate
+    v-model:filters="filters"
     :room="roomStore.room"
     :loading="roomStore.isJoining || !authStore.username"
-    :issues-loading="isIssuesLoading"
+    :issues-loading="isLoading"
     :current-user="authStore.username"
     :issues="issues"
     @select-story="roomStore.selectStory"

@@ -3,6 +3,7 @@ import hourglass from "@sit-onyx/icons/hourglass.svg?raw";
 import type { RoomDto } from "~/server/types";
 import type { GitHubIssue } from "~/types/github";
 import EstimationCard from "./EstimationCard.vue";
+import type { IssueFilters } from "./GitHubIssuesTable.vue";
 
 export type EstimationMethod = keyof typeof ESTIMATION_METHODS;
 
@@ -50,6 +51,8 @@ const emit = defineEmits<{
   endEstimation: [];
 }>();
 
+const filters = defineModel<IssueFilters>("filters");
+
 const selectedIssue = computed(() => {
   return props.issues?.find((i) => i.number === props.room?.selectedStory);
 });
@@ -88,6 +91,7 @@ const availableEstimations = computed(() => ESTIMATION_METHODS[estimationMethod.
 
     <GitHubIssuesTable
       v-else-if="isModerator"
+      v-model:filters="filters"
       class="room__table"
       :issues="props.issues ?? []"
       :selected-issue="props.room?.selectedStory"

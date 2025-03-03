@@ -46,5 +46,6 @@
       "placeholder": "Search number or title..."
     },
     "issues": "Issues"
-  }
+  },
+  "loadMore": "Load more"
 }
