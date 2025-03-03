@@ -1,6 +1,10 @@
 <script lang="ts" setup>
 import type { GitHubIssue } from "~/types/github";
 
+export type IssueFilters = Partial<{
+  search: string;
+}>;
+
 const props = defineProps<{
   issues: GitHubIssue[];
   selectedIssue?: number;
@@ -11,107 +15,95 @@ const emit = defineEmits<{
   select: [number: number];
 }>();
 
-const isOpen = ref(true);
-
-const searchValue = ref("");
-
-const filteredIssues = computed(() => {
-  const search = searchValue.value.toLowerCase();
-  if (!search.length) return props.issues;
-
-  return props.issues.filter((issue) => {
-    const isIssueNumber = !isNaN(+search.replace("#", ""));
-    if (isIssueNumber) return issue.number.toString().startsWith(search.replace("#", ""));
-    return issue.title.toLowerCase().includes(search);
-  });
-});
-
-const handleDetailsToggle = (event: ToggleEvent) => {
-  isOpen.value = (event.target as HTMLDetailsElement).open;
-};
+const filters = defineModel<IssueFilters>("filters", { default: () => ({}) });
 </script>
 
 <template>
   <div>
     <p class="description">{{ $t("issues.description") }}</p>
 
-    <OnyxSkeleton v-if="props.skeleton" class="table-skeleton" />
+    <OnyxTable class="table" striped with-vertical-borders>
+      <template #headline>
+        <OnyxHeadline is="h2">
+          {{ $t("issues.issues") }}
+          <span class="table__count"> ({{ props.issues.length }})</span>
+        </OnyxHeadline>
+      </template>
 
-    <OnyxEmpty v-else-if="!props.issues.length">
-      {{ $t("issues.empty") }}
-    </OnyxEmpty>
+      <template #actions>
+        <OnyxInput
+          v-model="filters.search"
+          class="table__search"
+          :label="$t('issues.search.label')"
+          :placeholder="$t('issues.search.placeholder')"
+          :skeleton="props.skeleton && !props.issues.length"
+          density="compact"
+          :readonly="props.skeleton"
+          hide-label
+        />
+      </template>
 
-    <details v-else :open="isOpen" @toggle="handleDetailsToggle">
-      <summary>{{ isOpen ? $t("issues.hide") : $t("issues.show") }}</summary>
+      <template #head>
+        <th>{{ $t("issues.id") }}</th>
+        <th>{{ $t("issues.title") }}</th>
+        <th>{{ $t("issues.assignees") }}</th>
+        <th>{{ $t("issues.labels") }}</th>
+      </template>
 
-      <OnyxInput
-        v-model="searchValue"
-        class="search"
-        :label="$t('issues.search.label')"
-        :placeholder="$t('issues.search.placeholder')"
-      />
+      <template v-if="props.skeleton">
+        <tr v-for="skeletonRow in 4" :key="skeletonRow">
+          <td v-for="skeletonColumn in 4" :key="skeletonColumn">
+            <OnyxSkeleton class="table__skeleton" />
+          </td>
+        </tr>
+      </template>
 
-      <OnyxEmpty v-if="!filteredIssues.length">
-        {{ $t("issues.search.noResults") }}
-      </OnyxEmpty>
-
-      <OnyxTable v-else class="table" striped with-vertical-borders>
-        <thead>
-          <tr>
-            <th>{{ $t("issues.id") }}</th>
-            <th>{{ $t("issues.title") }}</th>
-            <th>{{ $t("issues.assignees") }}</th>
-            <th>{{ $t("issues.labels") }}</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr
-            v-for="issue in filteredIssues"
-            :key="issue.number"
-            :class="{ selected: issue.number === props.selectedIssue }"
-            @click="emit('select', issue.number)"
-          >
-            <td>
-              <OnyxLink :href="issue.html_url" target="_blank"> #{{ issue.number }} </OnyxLink>
-            </td>
-            <td>{{ issue.title }}</td>
-            <td>
-              <OnyxAvatarStack v-if="issue.assignees.length">
-                <OnyxAvatar
-                  v-for="assignee in issue.assignees"
-                  :key="assignee.login"
-                  :full-name="assignee.login"
-                  :src="assignee.avatar_url"
-                  size="24px"
-                />
-              </OnyxAvatarStack>
-            </td>
-            <td>
-              <div class="labels">
-                <OnyxTooltip
-                  v-for="label of issue.labels"
-                  :key="label.name"
-                  :text="label.description"
-                  position="bottom"
-                >
-                  <template #default="{ trigger }">
-                    <div v-bind="trigger">
-                      <OnyxBadge
-                        density="compact"
-                        :style="`--onyx-badge-background-color: #${label.color}`"
-                      >
-                        {{ label.name }}
-                      </OnyxBadge>
-                    </div>
-                  </template>
-                </OnyxTooltip>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </OnyxTable>
-    </details>
+      <template v-else>
+        <tr
+          v-for="issue in props.issues"
+          :key="issue.number"
+          :class="{ selected: issue.number === props.selectedIssue }"
+          @click="emit('select', issue.number)"
+        >
+          <td>
+            <OnyxLink :href="issue.html_url" target="_blank"> #{{ issue.number }} </OnyxLink>
+          </td>
+          <td>{{ issue.title }}</td>
+          <td>
+            <OnyxAvatarStack v-if="issue.assignees.length">
+              <OnyxAvatar
+                v-for="assignee in issue.assignees"
+                :key="assignee.login"
+                :full-name="assignee.login"
+                :src="assignee.avatar_url"
+                size="24px"
+              />
+            </OnyxAvatarStack>
+          </td>
+          <td>
+            <div class="labels">
+              <OnyxTooltip
+                v-for="label of issue.labels"
+                :key="label.name"
+                :text="label.description"
+                position="bottom"
+              >
+                <template #default="{ trigger }">
+                  <div v-bind="trigger">
+                    <OnyxBadge
+                      density="compact"
+                      :style="`--onyx-badge-background-color: #${label.color}`"
+                    >
+                      {{ label.name }}
+                    </OnyxBadge>
+                  </div>
+                </template>
+              </OnyxTooltip>
+            </div>
+          </td>
+        </tr>
+      </template>
+    </OnyxTable>
   </div>
 </template>
 
@@ -120,16 +112,8 @@ const handleDetailsToggle = (event: ToggleEvent) => {
   margin-bottom: var(--onyx-spacing-md);
 }
 
-.table-skeleton {
-  width: 24rem;
-  max-width: 100%;
-  height: 12rem;
-}
-
 .table {
-  max-height: 24rem;
-  width: max-content;
-  max-width: 100%;
+  max-height: 32rem;
 
   tbody tr {
     cursor: pointer;
@@ -144,14 +128,19 @@ const handleDetailsToggle = (event: ToggleEvent) => {
       background-color: var(--onyx-color-base-primary-100);
     }
   }
-}
 
-details {
-  width: max-content;
-  max-width: 100%;
+  &__skeleton {
+    height: 1lh;
+    width: 100%;
+  }
 
-  summary {
-    margin-bottom: var(--onyx-spacing-2xs);
+  &__count {
+    color: var(--onyx-color-text-icons-neutral-soft);
+  }
+
+  &__search {
+    width: 16rem;
+    max-width: 100%;
   }
 }
 
@@ -165,10 +154,5 @@ details {
   :deep(.onyx-tooltip-wrapper div[aria-describedby]) {
     display: flex;
   }
-}
-
-.search {
-  margin-bottom: var(--onyx-spacing-lg);
-  max-width: 20rem;
 }
 </style>

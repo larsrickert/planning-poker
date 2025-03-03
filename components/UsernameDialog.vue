@@ -14,38 +14,47 @@ const handleSubmit = () => {
 </script>
 
 <template>
-  <OnyxDialog :label="$t('username.dialogHeadline')" modal alert :open="props.open">
-    <OnyxHeadline is="h2">{{ $t("username.dialogHeadline") }}</OnyxHeadline>
-    <p class="description">{{ $t("username.description") }}</p>
+  <OnyxModalDialog :label="$t('username.dialogHeadline')" alert :open="props.open">
+    <template #description>{{ $t("username.description") }}</template>
 
-    <form class="form" @submit.prevent="handleSubmit">
-      <OnyxInput
-        v-model="username"
-        :label="$t('username.label')"
-        :placeholder="$t('username.placeholder')"
-        required
-      />
+    <OnyxForm class="form" @submit.prevent="handleSubmit">
+      <div class="form__content">
+        <OnyxInput
+          v-model="username"
+          class="form__input"
+          :label="$t('username.label')"
+          :placeholder="$t('username.placeholder')"
+          required
+          autofocus
+        />
+      </div>
 
-      <OnyxButton :label="$t('username.submitLabel')" type="submit" mode="outline" />
-    </form>
-  </OnyxDialog>
+      <OnyxBottomBar class="form__footer">
+        <OnyxButton :label="$t('username.submitLabel')" type="submit" />
+      </OnyxBottomBar>
+    </OnyxForm>
+  </OnyxModalDialog>
 </template>
 
 <style lang="scss" scoped>
-.description {
-  white-space: pre-line;
-  margin-top: var(--onyx-spacing-sm);
-  margin-bottom: var(--onyx-spacing-lg);
-}
-
 .form {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  gap: var(--onyx-spacing-xl);
+  &__content {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: var(--onyx-spacing-xl);
+    padding: var(--onyx-density-xl) var(--onyx-modal-dialog-padding-inline);
+  }
 
-  .onyx-input {
+  &__input {
     width: 16rem;
+    max-width: 100%;
+  }
+
+  &__footer {
+    :deep(.onyx-bottom-bar__content) {
+      padding-inline: var(--onyx-modal-dialog-padding-inline);
+    }
   }
 }
 </style>
