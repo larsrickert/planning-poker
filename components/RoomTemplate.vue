@@ -8,9 +8,8 @@ import type { IssueFilters } from "./GitHubIssuesTable.vue";
 export type EstimationMethod = keyof typeof ESTIMATION_METHODS;
 
 const ESTIMATION_METHODS = {
+  Days: [0.125, 0.25, 0.5, 0.75, 1, 2, 3, 5, 10],
   "Story Points": [1, 2, 3, 5, 8, 13],
-  Hours: [4, 8, 12, 24, 48, 72],
-  Days: [0.5, 1, 2, 3, 5, 10],
 } as const;
 
 const props = withDefaults(
@@ -72,7 +71,11 @@ const methodOptions = computed(() =>
   })),
 );
 
-const estimationMethod = computed(() => props.room?.selectedMethod ?? "Story Points");
+const estimationMethod = computed(
+  () =>
+    props.room?.selectedMethod ??
+    (Object.keys(ESTIMATION_METHODS)[0] as keyof typeof ESTIMATION_METHODS),
+);
 
 const availableEstimations = computed(() => ESTIMATION_METHODS[estimationMethod.value]);
 </script>
