@@ -4,8 +4,6 @@
 
 Live on [https://planning.lars-rickert.de](https://planning.lars-rickert.de).
 
-Build using the [Nuxt template](https://github.com/larsrickert/template-nuxt).
-
 ## Development setup
 
 ### Prerequisites

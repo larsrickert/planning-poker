@@ -1,0 +1,15 @@
+.text {
+  &--soft {
+    color: var(--onyx-color-text-icons-neutral-soft);
+  }
+
+  &--medium {
+    color: var(--onyx-color-text-icons-neutral-medium);
+  }
+}
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--onyx-density-2xl);
+}
