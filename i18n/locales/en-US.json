@@ -1,50 +1,125 @@
 {
-  "appName": "GitHub planning poker",
-  "appVersion": "App version",
-  "toggleDarkMode": "Toggle dark mode",
-  "github": "See on GitHub",
-  "room": {
-    "create": {
-      "description": "Please create a new room for your planning poker.",
-      "submitLabel": "Create new room",
-      "githubRepo": {
-        "label": "GitHub repository",
-        "placeholder": "owner/repository"
+  "app": {
+    "version": "App version",
+    "name": "Planning Poker"
+  },
+  "auth": {
+    "logout": "Logout",
+    "login": "Login"
+  },
+  "cancel": "Cancel",
+  "close": "Close",
+  "copy": "Copy",
+  "createdAt": "Created at",
+  "custom": "Custom",
+  "dashboard": "Dashboard",
+  "day": "Day | Days",
+  "error": {
+    "backToHome": "Back to home",
+    "technicalDetails": "Technical error details"
+  },
+  "estimations": {
+    "availableUnits": "Available estimation units",
+    "average": "The average estimation of all users is:",
+    "customUnits": "Custom units",
+    "estimated": "Voted!",
+    "estimation": "Estimation | Estimations",
+    "reveal": {
+      "label": "Reveal votes",
+      "confirm": {
+        "label": "Confirm reveal",
+        "description": "Not all users have voted yet. Are you sure to reveal the votes anyway?"
       }
     },
-    "notFound": {
-      "text": "Room not found.\nGo back to the {link}.",
-      "link": "home page"
-    },
-    "headline": "Planning poker for",
-    "estimation": {
-      "headline": "Select an estimation using {method}:",
-      "reveal": "Reveal votes ({n} of {count})",
-      "average": "Average estimation",
-      "method-select": "Choose estimation method",
-      "methods": "List of estimation methods"
-    },
-    "waitingForModerator": "Waiting for moderator to select a story..."
+    "select": "Select estimation",
+    "units": "Estimation units"
   },
-  "username": {
-    "label": "Username",
-    "placeholder": "John Doe",
-    "dialogHeadline": "Set username",
-    "description": "Please set a username in order to use this application.\nFor the best experience, we recommend to use your GitHub username.",
-    "submitLabel": "Save",
-    "change": "Change username"
-  },
-  "issues": {
-    "id": "Issue",
-    "assignees": "Assignees",
-    "title": "Title",
-    "labels": "Labels",
-    "description": "Select a GitHub issue below to start the planning.",
-    "emptyBody": "Issue has no description",
-    "search": {
-      "label": "Search",
-      "placeholder": "Search number or title..."
+  "github": {
+    "settings": {
+      "headline": "GitHub settings",
+      "description": "Please enter the required details we need to load issues from your GitHub repository."
     },
-    "issues": "Issues"
-  }
+    "issues": {
+      "number": "Issue no.",
+      "title": "Title",
+      "issue": "Issue | Issues",
+      "assignee": "Assignee | Assignees",
+      "label": "Labels"
+    }
+  },
+  "home": {
+    "gettingStarted": "Getting Started",
+    "hero": {
+      "description": "An story estimation tool build for agile teams to plan and estimate their sprints. Create a new session, connect it to your GitHub repository and invite your team members to get started."
+    }
+  },
+  "repositories": {
+    "available": "Available repositories",
+    "repository": "Repository | Repositories"
+  },
+  "save": "Save",
+  "select": "Select",
+  "selected": "Selected",
+  "sessions": {
+    "create": {
+      "description": "Create a new planning session here so your team members can join to estimate tasks.",
+      "headline": "Create new planning session",
+      "new": "Create session"
+    },
+    "empty": "You don't have any sessions yet. Create a new one or join an existing session above.",
+    "join": {
+      "description": "Do you want to join an existing planning session? Then just enter the planning code below!",
+      "headline": "Join session",
+      "code": "Invite code"
+    },
+    "name": {
+      "label": "Planning name",
+      "placeholder": "My project name..."
+    },
+    "notFound": "Session not found or you don't have access to it.",
+    "toasts": {
+      "create": {
+        "error": "Error while creating new planning session",
+        "success": "Successfully created planning session \"{name}\""
+      },
+      "update": {
+        "error": "Error while updating session"
+      },
+      "updateEstimation": {
+        "error": "Error while updating estimation"
+      },
+      "reveal": {
+        "error": "Error while revealing estimations"
+      }
+    },
+    "yours": "Your sessions"
+  },
+  "settings": {
+    "general": "General settings"
+  },
+  "stories": {
+    "noSelected": "No story selected",
+    "select": "Select story",
+    "source": {
+      "description": "Please select the source that you want to use for your stories.",
+      "headline": "Story source"
+    },
+    "sources": {
+      "github": {
+        "headline": "GitHub",
+        "description": "Available issues will be loaded from a public GitHub repository that you can then choose from."
+      },
+      "other": {
+        "headline": "Need another source?",
+        "description": "Your story source is not listed here? You can create a feature request so we can consider integrating it.",
+        "createFeatureRequest": "Create feature request"
+      }
+    },
+    "story": "Story | Stories",
+    "points": "Story point | Story points"
+  },
+  "users": {
+    "user": "User | Users"
+  },
+  "value": "Value | Values"
 }

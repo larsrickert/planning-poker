@@ -1,0 +1,125 @@
+{
+  "app": {
+    "version": "App Version",
+    "name": "Planning Poker"
+  },
+  "auth": {
+    "logout": "Abmelden",
+    "login": "Anmelden"
+  },
+  "cancel": "Abbrechen",
+  "close": "Schließen",
+  "copy": "Kopieren",
+  "createdAt": "Erstellt am",
+  "custom": "Benutzerdefiniert",
+  "dashboard": "Dashboard",
+  "day": "Tag | Tage",
+  "error": {
+    "backToHome": "Zurück zur Startseite",
+    "technicalDetails": "Technische Fehler-Informationen"
+  },
+  "estimations": {
+    "availableUnits": "Verfügbare Schätzungs-Einheiten",
+    "average": "Die durchschnittliche Schätzung aller Benutzer ist:",
+    "customUnits": "Benutzerdefinierte Einheiten",
+    "estimated": "Geschätzt!",
+    "estimation": "Schätzung | Schätzungen",
+    "reveal": {
+      "label": "Schätzungen aufdecken",
+      "confirm": {
+        "label": "Aufdecken bestätigen",
+        "description": "Nicht alle Benutzer haben eine Schätzung abgegeben. Bist du sicher, dass du trotzdem die Schätzungen aufdecken möchtest?"
+      }
+    },
+    "select": "Schätzung auswählen",
+    "units": "Schätzungs-Einheiten"
+  },
+  "github": {
+    "settings": {
+      "headline": "GitHub Einstellungen",
+      "description": "Bitte gib die notwendigen Informationen ein, damit wir Issues von deinem GitHub respository laden können."
+    },
+    "issues": {
+      "number": "Issue Nr.",
+      "title": "Titel",
+      "issue": "Issue | Issues",
+      "assignee": "Bearbeiter",
+      "label": "Label"
+    }
+  },
+  "home": {
+    "gettingStarted": "Los geht's",
+    "hero": {
+      "description": "Ein Tool zum Schätzen von Stories für agile Teams, um Sprints zu planen und zu schätzen. Erstelle eine neue Session, verbinde sie mit deinem GitHub repository und lade deine Teammitglieder ein, um loszulegen."
+    }
+  },
+  "repositories": {
+    "available": "Verfügbare Repositories",
+    "repository": "Repository | Repositories"
+  },
+  "save": "Speichern",
+  "select": "Auswählen",
+  "selected": "Ausgewählt",
+  "sessions": {
+    "create": {
+      "description": "Erstelle hier eine neue Planning-Session, damit deine Teammitglieder beitreten und Aufgaben schätzen können.",
+      "headline": "Neue Planning-Session erstellen",
+      "new": "Session erstellen"
+    },
+    "empty": "Du hast noch keine aktiven Sessions. Erstelle oben eine neue oder tritt einer vorhandenen bei.",
+    "join": {
+      "description": "Möchtest du einer existierenden Planning-Session beitreten? Dann gib hier den Planning-Code ein!",
+      "headline": "Session beitreten",
+      "code": "Einladungscode"
+    },
+    "name": {
+      "label": "Planning-Name",
+      "placeholder": "Mein Projektname..."
+    },
+    "notFound": "Session nicht gefunden oder du bist nicht berechtigt.",
+    "toasts": {
+      "create": {
+        "error": "Fehler beim Erstellen einer neuen Planning-Session",
+        "success": "Planning-Session \"{name}\" erstellt"
+      },
+      "update": {
+        "error": "Fehler beim Aktualisieren der Session"
+      },
+      "updateEstimation": {
+        "error": "Fehler beim Aktualisieren der Schätzung"
+      },
+      "reveal": {
+        "error": "Fehler beim Aufdecken der Schätzungen"
+      }
+    },
+    "yours": "Deine Sessions"
+  },
+  "settings": {
+    "general": "Allgemeine Einstellungen"
+  },
+  "stories": {
+    "noSelected": "Keine Story ausgewählt",
+    "select": "Story auswählen",
+    "source": {
+      "description": "Bitte wähle die Quelle aus, die du für die Stories benutzen möchtest.",
+      "headline": "Story-Quelle"
+    },
+    "sources": {
+      "github": {
+        "headline": "GitHub",
+        "description": "Verfügbare issues werden von einem öffentlichen GitHub Repository geladen, aus denen du dann auswählen kannst."
+      },
+      "other": {
+        "headline": "Du brauchst eine andere Quelle?",
+        "description": "Deine Story-Quelle ist nicht gelistet? Dann kannst du einen Feature Request erstellen, damit wir eine Integration in Betracht ziehen können.",
+        "createFeatureRequest": "Anfrage erstellen"
+      }
+    },
+    "story": "Story | Stories",
+    "points": "Story point | Story points"
+  },
+  "users": {
+    "user": "Benutzer"
+  },
+  "value": "Wert | Werte"
+}
