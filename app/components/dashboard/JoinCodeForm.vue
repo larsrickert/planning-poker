@@ -45,5 +45,3 @@ const handleJoinPlanning = async () => {
     </OnyxInput>
   </OnyxForm>
 </template>
-
-<style lang="scss" scoped></style>
