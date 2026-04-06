@@ -6,6 +6,8 @@ services:
     environment:
       VIRTUAL_HOST: planning.lars-rickert.de
       LETSENCRYPT_HOST: planning.lars-rickert.de
+    depends_on:
+      - db
     # ports:
     #   - "3000:3000"
 
@@ -17,8 +19,10 @@ services:
       POSTGRES_USER: ${NUXT_POSTGRES_USER?:}
       POSTGRES_HOST: ${NUXT_POSTGRES_HOST?:}
       POSTGRES_PASSWORD: ${NUXT_POSTGRES_PASSWORD?:}
-    ports:
-      - 5432:5432
+    volumes:
+      - .data/db:/var/lib/postgresql/18/docker
+    # ports:
+    #   - 5432:5432
 
 networks:
   default:
