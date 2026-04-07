@@ -20,7 +20,7 @@ export const useDrizzle = () => {
     user: config.db.user,
     password: config.db.password,
     host: config.db.host,
-    ssl: config.db.host !== "localhost",
+    ssl: !["localhost", "db"].includes(config.db.host),
     max: 2,
   });
   db = drizzle(pool);

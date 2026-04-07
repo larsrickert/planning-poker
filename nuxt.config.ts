@@ -60,10 +60,10 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     db: {
-      name: process.env.NUXT_POSTGRES_DB,
-      user: process.env.NUXT_POSTGRES_USER,
-      password: process.env.NUXT_POSTGRES_PASSWORD,
-      host: process.env.NUXT_POSTGRES_HOST,
+      name: process.env.NUXT_DB_NAME,
+      user: process.env.NUXT_DB_USER,
+      password: process.env.NUXT_DB_PASSWORD,
+      host: process.env.NUXT_DB_HOST,
     },
   },
 });
