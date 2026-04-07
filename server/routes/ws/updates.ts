@@ -38,6 +38,6 @@ export default defineWebSocketHandler({
   },
 });
 
-export const publishWebsocketSessionUpdate = (id: PlanningSession["id"]) => {
-  useNitroApp().hooks.callHook(HOOK_NAME, id);
+export const publishWebsocketSessionUpdate = async (id: PlanningSession["id"]) => {
+  await useNitroApp().hooks.callHook(HOOK_NAME, id);
 };
