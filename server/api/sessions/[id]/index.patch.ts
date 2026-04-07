@@ -40,6 +40,6 @@ export default defineEventHandler(async (event) => {
       .where(eq(schema.planningSessionUsers.sessionId, id));
   }
 
-  publishWebsocketSessionUpdate(session.id);
+  await publishWebsocketSessionUpdate(session.id);
   return session;
 });

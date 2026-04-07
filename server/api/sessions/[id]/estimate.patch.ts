@@ -31,5 +31,5 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  publishWebsocketSessionUpdate(result.sessionId);
+  await publishWebsocketSessionUpdate(result.sessionId);
 });

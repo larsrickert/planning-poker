@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import { publishWebsocketSessionUpdate } from "../../ws/updates";
 
 export default defineEventHandler(async (event) => {
   const userSession = await getUserSession(event);
@@ -29,5 +30,6 @@ export default defineEventHandler(async (event) => {
     })
     .onConflictDoNothing();
 
+  await publishWebsocketSessionUpdate(session.id);
   return sendRedirect(event, `/sessions/${session.id}`);
 });
