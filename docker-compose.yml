@@ -10,6 +10,9 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    networks:
+      - default
+      - nginx-proxy
     # ports:
     #   - "3000:3000"
 
@@ -33,5 +36,5 @@ services:
 
 networks:
   default:
-    name: nginx-proxy
+  nginx-proxy:
     external: true
