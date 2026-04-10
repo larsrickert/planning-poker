@@ -51,7 +51,7 @@ const { executeImmediate: handleUpdateStory } = useAsyncState(
     onError: (e) => {
       toast.show({
         headline: t("sessions.toasts.update.error"),
-        description: (e as Error).message,
+        description: getErrorMessage(e),
         color: "danger",
       });
     },
@@ -81,7 +81,7 @@ const { executeImmediate: handleUpdateEstimation } = useAsyncState(
     onError: (e) => {
       toast.show({
         headline: t("sessions.toasts.updateEstimation.error"),
-        description: (e as Error).message,
+        description: getErrorMessage(e),
         color: "danger",
       });
     },
@@ -101,7 +101,7 @@ const { executeImmediate: handleRevealEstimations } = useAsyncState(
     onError: (e) => {
       toast.show({
         headline: t("sessions.toasts.reveal.error"),
-        description: (e as Error).message,
+        description: getErrorMessage(e),
         color: "danger",
       });
     },

@@ -75,7 +75,7 @@ const { isLoading, execute: createSession } = useAsyncState(
     onError: (e) => {
       toast.show({
         headline: t("sessions.toasts.create.error"),
-        description: (e as Error).message,
+        description: getErrorMessage(e),
         color: "danger",
       });
     },
