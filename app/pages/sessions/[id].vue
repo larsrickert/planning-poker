@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useToast } from "sit-onyx";
 
-definePageMeta({ layout: false });
+definePageMeta({ layout: false, middleware: ["auth"] });
 
 const { t } = useI18n();
 const route = useRoute();
@@ -23,9 +23,8 @@ useWebSocket("/ws/updates", {
   },
 });
 
-const { data, status, refresh: refreshSession } = useFetch(() => `/api/sessions/${id.value}`);
-const isLoading = computed(() => status.value === "pending");
-useHead({ title: computed(() => data.value?.name) });
+const { data: session, refresh: refreshSession } = useFetch(() => `/api/sessions/${id.value}`);
+useHead({ title: computed(() => session.value?.name) });
 
 const { data: users, refresh: refreshUsers } = useFetch(() => `/api/sessions/${id.value}/users`);
 
@@ -36,7 +35,7 @@ const refreshAllData = async () => {
 const currentUser = computed(() => users.value?.find((i) => i.email === user.value?.email));
 
 const isSessionOwner = computed(() => {
-  return !!currentUser.value && !!data.value && currentUser.value.id === data.value.userId;
+  return !!currentUser.value && !!session.value && currentUser.value.id === session.value.userId;
 });
 
 const { executeImmediate: handleUpdateStory } = useAsyncState(
@@ -52,7 +51,7 @@ const { executeImmediate: handleUpdateStory } = useAsyncState(
     onError: (e) => {
       toast.show({
         headline: t("sessions.toasts.update.error"),
-        description: (e as Error).message,
+        description: getErrorMessage(e),
         color: "danger",
       });
     },
@@ -82,7 +81,7 @@ const { executeImmediate: handleUpdateEstimation } = useAsyncState(
     onError: (e) => {
       toast.show({
         headline: t("sessions.toasts.updateEstimation.error"),
-        description: (e as Error).message,
+        description: getErrorMessage(e),
         color: "danger",
       });
     },
@@ -102,7 +101,7 @@ const { executeImmediate: handleRevealEstimations } = useAsyncState(
     onError: (e) => {
       toast.show({
         headline: t("sessions.toasts.reveal.error"),
-        description: (e as Error).message,
+        description: getErrorMessage(e),
         color: "danger",
       });
     },
@@ -110,8 +109,8 @@ const { executeImmediate: handleRevealEstimations } = useAsyncState(
 );
 
 const joinCodeLink = computed(() => {
-  if (!data.value || !globalThis.location) return;
-  return `${window.location.origin}/sessions/join/${data.value.joinCode}`;
+  if (!session.value || !globalThis.location) return;
+  return `${window.location.origin}/sessions/join/${session.value.joinCode}`;
 });
 </script>
 
@@ -121,34 +120,27 @@ const joinCodeLink = computed(() => {
       <PlanningSidebar
         :users
         :is-owner="isSessionOwner"
-        :status="data?.status"
+        :status="session?.status"
         @reveal-estimations="handleRevealEstimations"
       />
     </template>
 
-    <OnyxEmpty v-if="!data && !isLoading">
-      {{ $t("sessions.notFound") }}
-    </OnyxEmpty>
+    <OnyxEmpty v-if="!session"> {{ $t("sessions.notFound") }} </OnyxEmpty>
 
     <div v-else class="page">
-      <OnyxHeadline is="h1" :skeleton="isLoading"> {{ data?.name }} </OnyxHeadline>
+      <OnyxHeadline is="h1"> {{ session.name }} </OnyxHeadline>
 
       <div class="onyx-grid">
         <DetailsItem
-          v-if="data?.source === 'github'"
+          v-if="session.source === 'github'"
           class="onyx-grid-span-4"
           :label="$t('repositories.repository')"
-          :skeleton="isLoading"
         >
-          {{ data?.repository ?? "-" }}
+          {{ session.repository ?? "-" }}
         </DetailsItem>
 
-        <DetailsItem
-          class="onyx-grid-span-4"
-          :label="$t('sessions.join.code')"
-          :skeleton="isLoading"
-        >
-          {{ data?.joinCode ?? "-" }}
+        <DetailsItem class="onyx-grid-span-4" :label="$t('sessions.join.code')">
+          {{ session.joinCode }}
 
           <ClientOnly>
             <CopyButton v-if="joinCodeLink" :value="joinCodeLink" />
@@ -156,18 +148,14 @@ const joinCodeLink = computed(() => {
         </DetailsItem>
       </div>
 
-      <StorySelection
-        v-if="isSessionOwner && data"
-        :session="data"
-        @update:story="handleUpdateStory"
-      />
+      <StorySelection v-if="isSessionOwner" :session @update:story="handleUpdateStory" />
 
       <div class="section">
         <OnyxHeadline is="h2">{{ $t("estimations.select") }}</OnyxHeadline>
         <EstimationVote
           v-model="selectedEstimation"
-          :estimations="data?.estimationUnits ?? []"
-          :disabled="!data?.story || data.status !== 'vote'"
+          :estimations="session.estimationUnits"
+          :disabled="!session.story || session.status !== 'vote'"
         />
       </div>
 
@@ -175,13 +163,13 @@ const joinCodeLink = computed(() => {
         <OnyxHeadline is="h2">{{ $t("stories.story") }}</OnyxHeadline>
 
         <OnyxCard>
-          <OnyxEmpty v-if="!data?.story" class="empty">
+          <OnyxEmpty v-if="!session.story" class="empty">
             {{ $t("stories.noSelected") }}
           </OnyxEmpty>
 
           <template v-else>
-            <OnyxHeadline is="h3" show-as="h2">{{ data.story.title }}</OnyxHeadline>
-            <MarkdownRenderer :markdown="data.story.content ?? ''" />
+            <OnyxHeadline is="h3" show-as="h2">{{ session.story.title }}</OnyxHeadline>
+            <MarkdownRenderer :markdown="session.story.content ?? ''" />
           </template>
         </OnyxCard>
       </div>

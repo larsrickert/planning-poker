@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
 
   if (!result) {
     throw createError({
-      message: "Estimation not found or you don't have access to it",
+      message: "Session not found or you don't have access to it",
       statusCode: 404,
     });
   }

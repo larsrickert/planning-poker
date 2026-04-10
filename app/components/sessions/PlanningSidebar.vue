@@ -47,14 +47,14 @@ watch(
 <template>
   <OnyxSidebar class="sidebar" :label="$t('users.user', 2)">
     <template #header>
-      <OnyxHeadline is="h2">
+      <OnyxHeadline is="h3">
         {{ $t("users.user", 2) }}
         <span class="text--medium">({{ props.users?.length ?? 0 }})</span>
       </OnyxHeadline>
     </template>
 
     <div class="sidebar__content">
-      <UserSidebarItem v-for="user in props.users" :key="user.id" :user />
+      <UserSidebarItem v-for="user in props.users" :key="user.id" :user :status="props.status" />
     </div>
 
     <template v-if="props.isOwner" #footer>
