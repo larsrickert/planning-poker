@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 const props = defineProps<{
   user: EnrichedUser;
+  status?: PlanningSession["status"];
 }>();
 </script>
 
@@ -11,7 +12,7 @@ const props = defineProps<{
 
     <div v-if="props.user.estimation" class="trailing onyx-density-compact">
       <OnyxTag
-        v-if="typeof props.user.estimation === 'number'"
+        v-if="props.status === 'reveal' && typeof props.user.estimation === 'number'"
         :label="props.user.estimation.toString()"
       />
       <OnyxTag v-else :label="$t('estimations.estimated')" color="success" />
