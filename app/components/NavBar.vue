@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import logo from "~~/public/favicon.svg?raw";
+import logo from "~/assets/images/logo.svg?raw";
 </script>
 
 <template>
