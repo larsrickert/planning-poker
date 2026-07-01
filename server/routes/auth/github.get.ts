@@ -22,16 +22,16 @@ export default defineEventHandler(async (event) => {
     config: {
       emailRequired: true,
     },
-    async onSuccess(event, { user }) {
-      const session = await setUserSession(event, {
-        user: {
-          name: user.name,
-          email: user.email ?? "",
-          picture: user.avatar_url,
-        },
-      } satisfies Session);
+    async onSuccess(event, { user: gitHubUser }) {
+      const user = {
+        name: gitHubUser.name || gitHubUser.login,
+        email: gitHubUser.email ?? "",
+        picture: gitHubUser.avatar_url,
+      } satisfies Session["user"];
 
-      await upsertUserToDatabase(session);
+      // create the user in the database first so if it fails, the session should also not be set
+      await upsertUserToDatabase(user);
+      await setUserSession(event, { user });
 
       const redirectTo = getCookie(event, REDIRECT_COOKIE_NAME) ?? "/";
       deleteCookie(event, REDIRECT_COOKIE_NAME);
@@ -48,10 +48,8 @@ export default defineEventHandler(async (event) => {
 /**
  * Insert (or updates if already exists) the given user into the database.
  */
-const upsertUserToDatabase = async ({ user }: UserSession) => {
-  if (!user) return;
+const upsertUserToDatabase = async (user: NonNullable<Session["user"]>) => {
   const db = useDrizzle();
-
   await db.insert(schema.users).values(user).onConflictDoUpdate({
     target: schema.users.email,
     set: user,
