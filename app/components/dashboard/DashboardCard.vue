@@ -15,7 +15,7 @@ const slots = defineSlots<{
     <p class="text--medium">{{ props.description }}</p>
 
     <div v-if="slots.default" class="card__actions">
-      <slot></slot>
+      <slot />
     </div>
   </OnyxCard>
 </template>

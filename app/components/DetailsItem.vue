@@ -15,7 +15,7 @@ defineSlots<{
 
     <div class="item__value">
       <OnyxSkeleton v-if="props.skeleton" class="item__skeleton" />
-      <slot v-else></slot>
+      <slot v-else />
     </div>
   </div>
 </template>
