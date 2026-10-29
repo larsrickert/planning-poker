@@ -42,12 +42,12 @@ const emit = defineEmits<{
 
 <template>
   <OnyxCard class="card" :class="{ 'card--selected': props.selected }">
-    <slot name="image"></slot>
+    <slot name="image" />
 
     <OnyxHeadline is="h2">{{ props.headline }}</OnyxHeadline>
 
     <p class="text--medium">
-      <slot></slot>
+      <slot />
     </p>
 
     <OnyxButton
