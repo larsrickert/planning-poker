@@ -14,13 +14,12 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@vueuse/nuxt",
     "nuxt-auth-utils",
-    "@nuxtjs/mdc",
   ],
   css: [
     "~/assets/css/index.scss",
     "@fontsource-variable/source-sans-3",
     "@fontsource-variable/source-code-pro",
-    "@sit-onyx/mdc/style.css",
+    "@sit-onyx/comark/style.css",
   ],
   app: {
     head: {
@@ -36,13 +35,6 @@ export default defineNuxtConfig({
     ],
   },
   components: [{ path: "~/components", pathPrefix: false }],
-  mdc: {
-    components: {
-      map: {
-        input: "ProseInput",
-      },
-    },
-  },
   nitro: {
     compressPublicAssets: true,
     experimental: {
