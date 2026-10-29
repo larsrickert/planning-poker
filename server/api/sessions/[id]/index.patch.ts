@@ -1,27 +1,26 @@
 import { and, eq } from "drizzle-orm";
 import { createUpdateSchema } from "drizzle-zod";
-import z from "zod/v4";
 import { publishWebsocketSessionUpdate } from "~~/server/routes/ws/updates";
+
+const baseSchema = createUpdateSchema(schema.planningSession, {}).pick({
+  story: true,
+  status: true,
+});
+
+const patchSchema = baseSchema.extend({
+  status: baseSchema.shape.status.default("vote"),
+});
 
 export default defineEventHandler(async (event) => {
   const { user } = await requireUser(event);
   const db = useDrizzle();
   const id = getRouterParam(event, "id")!;
 
-  const baseSchema = createUpdateSchema(schema.planningSession, {}).pick({
-    story: true,
-    status: true,
-  });
-
-  const patchSchema = baseSchema.extend({
-    status: z.preprocess((val) => val ?? "vote", baseSchema.shape.status),
-  });
-
   const body = await readValidatedBody(event, patchSchema.parse);
 
   const [session] = await db
     .update(schema.planningSession)
-    .set({ ...body })
+    .set(body)
     .where(and(eq(schema.planningSession.id, id), eq(schema.planningSession.userId, user.id)))
     .returning();
 
