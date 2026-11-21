@@ -1,5 +1,13 @@
 import type { UserSession } from "#auth-utils";
 import z from "zod";
+import {
+  sendRedirect,
+  getCookie,
+  setCookie,
+  defineEventHandler,
+  deleteCookie,
+  getValidatedQuery,
+} from "nuxt/server";
 
 // currently needed to provide intellisense for session below
 type Session = Pick<UserSession, "user" | "secure">;
